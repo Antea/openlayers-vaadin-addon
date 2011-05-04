@@ -72,7 +72,7 @@
                             <Implementation-Version>${project.version}</Implementation-Version>
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
 							<!-- Comma-separated list of widgetsets in the package -->
-							<Vaadin-Widgetsets>org.vaadin.vol.VolWidgetsetWithHostedScript</Vaadin-Widgetsets>
+							<Vaadin-Widgetsets>org.vaadin.vol.VolWidgetsetWithHostedScript,org.vaadin.vol.VolWidgetsetWithEmbeddedScript</Vaadin-Widgetsets>
 						</manifestEntries>
 					</archive>
 				</configuration>
