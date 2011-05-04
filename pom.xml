@@ -3,20 +3,46 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.vaadin.vol</groupId>
 	<artifactId>openlayers-wrapper</artifactId>
-	<version>0.9.5-SNAPSHOT</version>
+    <version>0.9.5-ANTEA-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>openLayers vaadin wrapper</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
+
+        <distributionManagement>
+            <!-- Indirizzo web del site generato da Maven. -->
+            <repository>
+                <id>m2</id>
+                <name>Repository m2.antea.bogus</name>
+                <url>scp://deployer@m2.antea.bogus/srv/maven</url>
+            </repository>
+        </distributionManagement>
+
+        <scm>
+            <connection>scm:git:ssh://${user.name}@repo.antea.bogus/srv/git/openlayers-vaadin-wrapper.git/</connection>
+            <developerConnection>scm:git:ssh://${user.name}@repo.antea.bogus/srv/git/openlayers-vaadin-wrapper.git/</developerConnection>
+            <url>http://repo.antea.bogus:8081/?p=openlayers-vaadin-wrapper.git</url>
+        </scm>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <optimize>false</optimize>
+                    <compilerVersion>1.6</compilerVersion>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
 
@@ -42,8 +68,9 @@
 
 							<!-- Implementation-Title and Implementation-Version come from the 
 								POM by default -->
-							<Implementation-Title>OpenLayers Wrapper</Implementation-Title>
-
+                            <Implementation-Title>${project.name}</Implementation-Title>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Vaadin-Package-Version>1</Vaadin-Package-Version>
 							<!-- Comma-separated list of widgetsets in the package -->
 							<Vaadin-Widgetsets>org.vaadin.vol.VolWidgetsetWithHostedScript</Vaadin-Widgetsets>
 						</manifestEntries>
@@ -67,39 +94,18 @@
 					<module>org.vaadin.vol.demo.VolExampleAppWidgetset</module>
 					<runTarget>http://localhost:9998/</runTarget>
 					<draftCompile>true</draftCompile>
-					<style>PRETTY</style>
 				</configuration>
 			</plugin>
+                    <!--style>PRETTY</style-->
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- This creates a zip file of jar and sources jar. Makes sources available 
-				to maven users automatically?! We could also use this to package required 
-				dependecies for those poor developer souls that still dont know how to use 
-				a build system that supports transient dependencies... -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<finalName>openlayers-wrapper-${project.version}</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>assembly.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
 
 		</plugins>
 
@@ -107,13 +113,15 @@
 			included in the produced JARs -->
 		<resources>
 			<resource>
-				<directory>src/main/java</directory>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/java</directory>
+                <includes>
+                    <include>**/*.java</include>
+                </includes>
 			</resource>
 			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>src/test/java</directory>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources</directory>
 			</resource>
 		</resources>
 
@@ -121,6 +129,17 @@
 
 	<repositories>
 		<repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/
+            </url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
 			<id>vaadin-addons</id>
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
@@ -134,6 +153,20 @@
 			</snapshots>
 		</repository>
 
+            <!-- Repository condivisa Antea. -->
+            <repository>
+                <id>antea</id>
+                <name>Repository Aziendale Antea</name>
+                <url>http://m2.antea.bogus</url>
+                <releases>
+                    <enabled>true</enabled>
+                    <updatePolicy>never</updatePolicy>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>daily</updatePolicy>
+                </snapshots>
+            </repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -147,14 +180,31 @@
 				<enabled>false</enabled>
 			</releases>
 		</pluginRepository>
+        <pluginRepository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/
+            </url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
 	</pluginRepositories>
 
 
 	<dependencies>
 		<dependency>
+            <groupId>org.gwtopenmaps.openlayers</groupId>
+            <artifactId>gwt-openlayers-client</artifactId>
+            <version>0.8</version>
+        </dependency>
+        <dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin</artifactId>
-			<version>6.7.4</version>
+            <version>6.7.6</version>
+            <scope>provided</scope>
 		</dependency>
 		<!-- This is also used by gwt-maven-plugin to deduce GWT version number. -->
 		<dependency>
