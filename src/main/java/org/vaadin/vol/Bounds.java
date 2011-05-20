@@ -11,7 +11,7 @@ public class Bounds {
 	private double right;
 
 	public Bounds(Point... points) {
-		init();
+		this(-90, 180, 90, -180);
 
 		for (int i = 0; i < points.length; i++) {
 			Point p = points[i];
@@ -23,11 +23,11 @@ public class Bounds {
 	 * Init value are first point check and speed up bounds computing with huge
 	 * arrays
 	 */
-	private void init() {
-		bottom = +90.00;
-		top = -90.00;
-		right = -180.00;
-		left = +180.00;
+	public Bounds(float top, float left, float bottom, float right) {
+		this.bottom = bottom;
+		this.top = top;
+		this.right = right;
+		this.left = left;
 	}
 
 	/**
