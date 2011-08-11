@@ -35,6 +35,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     private double centerLat = 0;
     private int zoom = 3;
     private boolean partialRepaint;
+    private Bounds maxExtent;
 
     private HashSet<Control> controls = new HashSet<Control>(Arrays.asList(
             Control.ArgParser, Control.Navigation, Control.TouchNavigation,
@@ -175,6 +176,11 @@ public class OpenLayersMap extends AbstractComponentContainer implements
 
         if (isDirty("restrictedExtend") && restrictedExtend != null) {
             restrictedExtend.paint("re", target);
+        }
+
+        if (isDirty("maxExtent") && maxExtent != null) {
+            maxExtent.paint("me", target);
+            maxExtent = null;
         }
 
         if (isDirty("zoomToExtent") && zoomToExtent != null) {
@@ -574,4 +580,8 @@ public class OpenLayersMap extends AbstractComponentContainer implements
         removeListener(ExtentChangeEvent.class, listener);
     }
 
+    public void setMaxExtent(Bounds bounds) {
+        maxExtent = bounds;
+        setDirty("maxExtent");
+    }
 }

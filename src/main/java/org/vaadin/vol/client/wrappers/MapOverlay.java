@@ -140,4 +140,8 @@ public class MapOverlay extends AbstractOpenLayersWrapper {
         return this.getLonLatFromPixel(pixel);
     }-*/;
 
+    public final native void setMaxExtent(Bounds bounds)
+    /*-{
+    	this.maxExtent = bounds;
+    }-*/;
 }

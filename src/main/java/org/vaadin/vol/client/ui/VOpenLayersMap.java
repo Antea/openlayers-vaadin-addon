@@ -234,6 +234,15 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
 
         updateControls(uidl);
 
+        if (uidl.hasAttribute("me_top")) {
+            Bounds bounds = Bounds.create(uidl.getDoubleAttribute("me_left"),
+                    uidl.getDoubleAttribute("me_bottom"),
+                    uidl.getDoubleAttribute("me_right"),
+                    uidl.getDoubleAttribute("me_top"));
+            bounds.transform(getProjection(), getMap().getProjection());
+            map.setMaxExtent(bounds);
+        }
+
         if (uidl.getBooleanAttribute("componentsPainted")) {
             orphanedcomponents = new HashSet<String>(components.keySet());
 
