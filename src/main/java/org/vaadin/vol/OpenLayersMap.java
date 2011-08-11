@@ -126,6 +126,7 @@ public class OpenLayersMap extends AbstractComponentContainer {
     private String jsMapOptions;
     private Bounds zoomToExtent;
     private Bounds restrictedExtend;
+    private Bounds maxExtent;
 
     private void setDirty(String fieldName) {
         if (!fullRepaint) {
@@ -155,6 +156,11 @@ public class OpenLayersMap extends AbstractComponentContainer {
 
         if (isDirty("restrictedExtend") && restrictedExtend != null) {
             restrictedExtend.paint("re", target);
+        }
+
+        if (isDirty("maxExtent") && maxExtent != null) {
+            maxExtent.paint("me", target);
+            maxExtent = null;
         }
 
         if (isDirty("zoomToExtent") && zoomToExtent != null) {
@@ -307,4 +313,8 @@ public class OpenLayersMap extends AbstractComponentContainer {
         setDirty("restrictedExtend");
     }
 
+    public void setMaxExtent(Bounds bounds) {
+        maxExtent = bounds;
+        setDirty("maxExtent");
+    }
 }

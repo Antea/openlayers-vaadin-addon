@@ -130,6 +130,10 @@ public class Map extends Widget {
         getMap().setRestrictedExtent(bounds);
     }
 
+    public void setMaxExtent(Bounds bounds) {
+         getMap().setMaxExtent(bounds);
+    }
+
     public Layer getBaseLayer() {
         return getMap().getBaseLayer();
     }

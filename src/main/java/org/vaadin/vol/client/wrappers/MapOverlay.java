@@ -135,4 +135,8 @@ public class MapOverlay extends AbstractOpenLayersWrapper {
     	return this.controls;
     }-*/;
 
+    public final native void setMaxExtent(Bounds bounds)
+    /*-{
+    	this.maxExtent = bounds;
+    }-*/;
 }
