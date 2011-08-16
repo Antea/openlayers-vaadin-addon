@@ -101,7 +101,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             _fModifiedListener = new GwtOlHandler() {
 
                 public void onEvent(JsArray arguments) {
-                    if (!updating && drawingMode != "NONE") {
+                    if (!updating && !"NONE".equals(drawingMode)) {
                         // use vaadin js object helper to get the actual feature
                         // from ol event
                         // TODO improve typing of OL events
@@ -165,7 +165,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             _fAddedListener = new GwtOlHandler() {
 
                 public void onEvent(JsArray arguments) {
-                    if (!updating && drawingMode != "NONE") {
+                    if (!updating && !"NONE".equals(drawingMode)) {
                         // use vaadin js object helper to get the actual feature
                         // from ol event
                         // TODO improve typing of OL events
@@ -173,7 +173,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                         Vector feature = event.getFieldByName("feature").cast();
                         Geometry geometry = feature.getGeometry();
 
-                        if (drawingMode == "AREA" || drawingMode == "LINE") {
+                        if ("AREA".equals(drawingMode) || "LINE".equals(drawingMode)) {
                             LineString ls = geometry.cast();
                             JsArray<Point> allVertices = ls.getAllVertices();
                             client.updateVariable(paintableId,
@@ -188,7 +188,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                             }
                             client.updateVariable(paintableId, "vertices",
                                     points, false);
-                        } else if (drawingMode == "POINT") {
+                        } else if ("POINT".equals(drawingMode)) {
                             // point
                             Point point = geometry.cast();
                             point.transform(getMap().getProjection(),
@@ -202,7 +202,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                         // communicate points to server and mark the
                         // new geometry to be removed on next update.
                         client.sendPendingVariableChanges();
-                        if (drawingMode != "MODIFY") {
+                        if (!"MODIFY".equals(drawingMode)) {
                             lastNewDrawing = feature;
                         }
                     }
@@ -261,14 +261,14 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
     private void setSelectionMode(UIDL layer) {
         String newSelectionMode = layer.getStringAttribute("smode").intern();
-        if (currentSelectionMode != newSelectionMode) {
+        if (!currentSelectionMode.equals(newSelectionMode)) {
             if (selectFeature != null) {
                 selectFeature.deActivate();
                 getMap().removeControl(selectFeature);
                 selectFeature = null;
             }
 
-            if (newSelectionMode != "NONE") {
+            if (!"NONE".equals(newSelectionMode)) {
                 selectFeature = SelectFeature.create(vectors);
                 getMap().addControl(selectFeature);
                 selectFeature.activate();
@@ -293,8 +293,8 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
     private void setDrawingMode(String newDrawingMode) {
         newDrawingMode = newDrawingMode.intern();
-        if (drawingMode != newDrawingMode) {
-            if (drawingMode != "NONE") {
+        if (!drawingMode.equals(newDrawingMode)) {
+            if (!"NONE".equals(drawingMode)) {
                 // remove old drawing feature
                 df.deActivate();
                 getMap().removeControl(df);
@@ -302,13 +302,13 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             drawingMode = newDrawingMode;
             df = null;
 
-            if (drawingMode == "AREA") {
+            if ("AREA".equals(drawingMode)) {
                 df = DrawFeature.create(getLayer(), PolygonHandler.get());
-            } else if (drawingMode == "LINE") {
+            } else if ("LINE".equals(drawingMode)) {
                 df = DrawFeature.create(getLayer(), PathHandler.get());
-            } else if (drawingMode == "MODIFY") {
+            } else if ("MODIFY".equals(drawingMode)) {
                 df = ModifyFeature.create(getLayer());
-            } else if (drawingMode == "POINT") {
+            } else if ("POINT".equals(drawingMode)) {
                 df = DrawFeature.create(getLayer(), PointHandler.get());
             }
             if (df != null) {
