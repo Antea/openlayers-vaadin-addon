@@ -18,11 +18,19 @@ public class VectorLayer extends Layer {
     public native final static VectorLayer create(String displayName)
     /*-{
 
-        var layer_style = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['default']);
-        layer_style.fillOpacity = 0.2;
-        layer_style.graphicOpacity = 1;
+        var defaultStyle = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['default']);
+        defaultStyle.fillOpacity = 0.2;
+        defaultStyle.graphicOpacity = 1;
+        var selectStyle = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['select']);
+        var temporaryStyle = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['temporary']);
     	
-    	return new $wnd.OpenLayers.Layer.Vector(displayName, {styles: layer_style});
+        var styles = new $wnd.OpenLayers.StyleMap({
+            "default" : defaultStyle,
+            "select" : selectStyle,
+            "temporary" : temporaryStyle
+        });
+
+    	return new $wnd.OpenLayers.Layer.Vector(displayName, {styleMap: styles});
     	
     }-*/;
 
