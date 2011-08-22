@@ -147,4 +147,19 @@ public class Map extends Widget {
         return getMap().getLonLatFromPixel(pixel);
     }
 
+    public void panAndZoomTo(Bounds bounds) {
+        getMap().panAndZoomTo(bounds);
+    }
+
+    public void moveAndZoomTo(Bounds bounds) {
+        getMap().moveAndZoomTo(bounds);
+    }
+
+    public void moveTo(LonLat lonLat) {
+        getMap().moveTo(lonLat);
+    }
+
+    public void zoomToMaxExtent() {
+        getMap().zoomToMaxExtent();
+    }
 }

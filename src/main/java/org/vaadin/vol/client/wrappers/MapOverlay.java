@@ -136,4 +136,29 @@ public class MapOverlay extends AbstractOpenLayersWrapper {
     /*-{
     	this.maxExtent = bounds;
     }-*/;
+
+    public final native void panAndZoomTo(Bounds bounds)
+    /*-{
+        var zoom = this.getZoomForExtent(bounds);
+        this.zoomTo(zoom);
+        var lonLat = bounds.getCenterLonLat();
+    	this.panTo(lonLat);
+    }-*/;
+
+    public final native void moveAndZoomTo(Bounds bounds)
+    /*-{
+        var zoom = this.getZoomForExtent(bounds);
+        var lonLat = bounds.getCenterLonLat();
+    	this.moveTo(lonLat, zoom, true);
+    }-*/;
+
+    public final native void moveTo(LonLat lonLat)
+    /*-{
+    	this.moveTo(lonLat);
+    }-*/;
+
+    public final native void zoomToMaxExtent()
+    /*-{
+    	this.zoomToMaxExtent();
+    }-*/;
 }

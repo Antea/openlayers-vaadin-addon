@@ -272,6 +272,10 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
             map.setRestrictedExtent(bounds);
         }
 
+        if (uidl.getBooleanAttribute("zme")) {
+            getMap().zoomToMaxExtent();
+        }
+
         updateZoomAndCenter(uidl);
 
         if (uidl.getBooleanAttribute("componentsPainted")) {
@@ -372,9 +376,23 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
     }
 
     private void updateZoomAndCenter(UIDL uidl) {
-
         // Skip for empty map
         if (getMap().getProjection() != null) {
+
+            if (uidl.hasAttribute("mze_top")) {
+                /*
+                 * Move and zoom to extent
+                 */
+                double top = uidl.getDoubleAttribute("mze_top");
+                double right = uidl.getDoubleAttribute("mze_right");
+                double bottom = uidl.getDoubleAttribute("mze_bottom");
+                double left = uidl.getDoubleAttribute("mze_left");
+                Bounds bounds = Bounds.create(left, bottom, right, top);
+                bounds.transform(getProjection(), getMap().getProjection());
+                // getMap().moveAndZoomTo(bounds);
+                getMap().panAndZoomTo(bounds);
+                return;
+            }
 
             if (uidl.hasAttribute("ze_top")) {
                 /*
