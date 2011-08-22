@@ -263,8 +263,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     }
 
     protected void updateExtent(Map<String, Object> variables) {
-        int zoom = (Integer) variables.get("zoom");
-        this.zoom = zoom;
+        this.zoom = (Integer) variables.get("zoom");
         top = (Double) variables.get("top");
         right = (Double) variables.get("right");
         bottom = (Double) variables.get("bottom");
