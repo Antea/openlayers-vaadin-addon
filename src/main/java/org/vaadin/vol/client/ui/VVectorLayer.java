@@ -33,6 +33,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ValueMap;
+import org.vaadin.vol.client.wrappers.control.HighlightFeature;
 
 public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
@@ -262,6 +263,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
         updateStyleMap(layer);
         setDrawingMode(layer.getStringAttribute("dmode"));
+        setHightlightMode(layer);
         setSelectionMode(layer);
 
         HashSet<Widget> orphaned = new HashSet<Widget>();
@@ -285,6 +287,28 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             widget.removeFromParent();
         }
         updating = false;
+    }
+
+   private String currentHighlightMode;
+   private HighlightFeature hoverFeature;
+
+   private void setHightlightMode(UIDL layer) {
+        String newHighlightMode = layer.getStringAttribute("hmode").intern();
+        if (!currentHighlightMode.equals(newHighlightMode)) {
+            if (hoverFeature != null) {
+                hoverFeature.deActivate();
+                getMap().removeControl(hoverFeature);
+                hoverFeature = null;
+            }
+
+            if (!"NONE".equals(newHighlightMode)) {
+                hoverFeature = HighlightFeature.create(vectors);
+                getMap().addControl(hoverFeature);
+                hoverFeature.activate();
+            }
+
+            currentHighlightMode = newHighlightMode;
+        }
     }
 
     private void setSelectionMode(UIDL layer) {
