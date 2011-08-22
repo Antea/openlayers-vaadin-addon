@@ -11,7 +11,7 @@ public class LinearRing extends LineString {
 	/*-{
 		points.push(points[0]);
 		
-		var linearRing = new $wnd.OpenLayers.Geometry.LinearRing($wnd.toOlArray(points));
+		var linearRing = new $wnd.OpenLayers.Geometry.LinearRing($wnd.gwt_openlayers_util.convertToArray(points));
 		
 		return linearRing;
 	}-*/;

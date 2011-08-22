@@ -114,8 +114,8 @@ public class VOpenLayersMap extends FlowPanel implements Container {
                             extent.getBottom(), immediate);
                 }
             };
-            getMap().registerEventHandler("moveend", extentChangeListener);
-            getMap().registerEventHandler("zoomed", extentChangeListener);
+            map.registerEventHandler("moveend", extentChangeListener);
+            map.registerEventHandler("zoomed", extentChangeListener);
 
             /*
              * Update extent on first paint.
@@ -163,7 +163,7 @@ public class VOpenLayersMap extends FlowPanel implements Container {
                     uidl.getDoubleAttribute("re_bottom"),
                     uidl.getDoubleAttribute("re_right"),
                     uidl.getDoubleAttribute("re_top"));
-            bounds.transform(DEFAULT_PROJECTION, getMap().getProjection());
+            bounds.transform(DEFAULT_PROJECTION, map.getProjection());
             map.setRestrictedExtent(bounds);
         }
 
@@ -215,16 +215,14 @@ public class VOpenLayersMap extends FlowPanel implements Container {
     private void updateZoomAndCenter(UIDL uidl) {
 
         if (uidl.hasAttribute("ze_top")) {
-            /*
-             * Zoom to extent
-             */
+            // zoom to extent
             double top = uidl.getDoubleAttribute("ze_top");
             double right = uidl.getDoubleAttribute("ze_right");
             double bottom = uidl.getDoubleAttribute("ze_bottom");
             double left = uidl.getDoubleAttribute("ze_left");
             Bounds bounds = Bounds.create(left, bottom, right, top);
-            bounds.transform(DEFAULT_PROJECTION, getMap().getProjection());
-            getMap().zoomToExtent(bounds);
+            bounds.transform(DEFAULT_PROJECTION, map.getProjection());
+            map.zoomToExtent(bounds);
             return;
         }
 

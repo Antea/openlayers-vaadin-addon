@@ -41,7 +41,7 @@ public abstract class VAbstractVector extends Widget implements Paintable {
         updateVector(childUIDL, client);
         if(childUIDL.hasAttribute("style")) {
             intent = childUIDL.getStringAttribute("style");
-            getVector().setRenderIntent(intent);
+            vector.setRenderIntent(intent);
         }
         updateStyle(childUIDL, client);
 

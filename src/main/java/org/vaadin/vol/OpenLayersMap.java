@@ -202,8 +202,7 @@ public class OpenLayersMap extends AbstractComponentContainer {
     }
 
     protected void updateExtent(Map<String, Object> variables) {
-        int zoom = (Integer) variables.get("zoom");
-        this.zoom = zoom;
+        zoom = (Integer) variables.get("zoom");
         top = (Double) variables.get("top");
         right = (Double) variables.get("right");
         bottom = (Double) variables.get("bottom");
@@ -216,12 +215,7 @@ public class OpenLayersMap extends AbstractComponentContainer {
      * @return
      */
     public Bounds getExtend() {
-        Bounds bounds = new Bounds();
-        bounds.setTop(top);
-        bounds.setLeft(left);
-        bounds.setRight(right);
-        bounds.setBottom(bottom);
-        return bounds;
+        return new Bounds((float) top, (float) left, (float) right, (float) bottom);
     }
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
