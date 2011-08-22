@@ -15,7 +15,7 @@ public class SelectFeature extends Control {
            toggleKey: "ctrlKey",
            multipleKey: "shiftKey",
     	}
-        o = multiple;
+        o.multiple = multiple;
         o.box = boxselection;
         o.clickout = clickout;
         o.toggle = toggle;
