@@ -27,6 +27,12 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
         // MULTI, MULTI_WITH_AREA_SELECTION etc
     }
 
+    public enum HighlightMode {
+        NONE, DEFAULT
+    }
+
+    private HighlightMode highlightMode = HighlightMode.NONE;
+
     private String displayName = "Vector layer";
 
     private List<Vector> vectors = new LinkedList<Vector>();
@@ -48,6 +54,7 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
         target.addAttribute("name", displayName);
         target.addAttribute("dmode", drawindMode.toString());
         target.addAttribute("smode", selectionMode.toString());
+        target.addAttribute("hmode", highlightMode.toString());
 
         if (stylemap != null) {
             stylemap.paint(target);
@@ -208,6 +215,11 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
 
     public void setSelectionMode(SelectionMode selectionMode) {
         this.selectionMode = selectionMode;
+        requestRepaint();
+    }
+
+    public void setHighlightMode(HighlightMode highlightMode) {
+        this.highlightMode = highlightMode;
         requestRepaint();
     }
 
