@@ -35,4 +35,9 @@ public class Bounds extends JavaScriptObject {
 		return this.right;
 	}-*/;
 
+	public native final LonLat getCenterLonLat()
+	/*-{
+		return this.centerLonLat;
+	}-*/;
+
 }

@@ -12,6 +12,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
+import org.vaadin.vol.client.wrappers.LonLat;
 
 /**
  * Server side component for the VOpenLayersMap widget.
@@ -127,6 +128,7 @@ public class OpenLayersMap extends AbstractComponentContainer {
     private Bounds zoomToExtent;
     private Bounds restrictedExtend;
     private Bounds maxExtent;
+    private Bounds moveToExtent;
 
     private void setDirty(String fieldName) {
         if (!fullRepaint) {
@@ -161,6 +163,11 @@ public class OpenLayersMap extends AbstractComponentContainer {
         if (isDirty("maxExtent") && maxExtent != null) {
             maxExtent.paint("me", target);
             maxExtent = null;
+        }
+
+        if (isDirty("moveAndZoomTo") && moveToExtent != null) {
+            moveToExtent.paint("mze", target);
+            moveToExtent = null;
         }
 
         if (isDirty("zoomToExtent") && zoomToExtent != null) {
@@ -310,5 +317,10 @@ public class OpenLayersMap extends AbstractComponentContainer {
     public void setMaxExtent(Bounds bounds) {
         maxExtent = bounds;
         setDirty("maxExtent");
+    }
+
+    public void moveAndZoomToExtent(Bounds bounds) {
+        moveToExtent = bounds;
+        setDirty("moveAndZoomTo");
     }
 }

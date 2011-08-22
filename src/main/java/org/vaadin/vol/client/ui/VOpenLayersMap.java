@@ -214,6 +214,18 @@ public class VOpenLayersMap extends FlowPanel implements Container {
 
     private void updateZoomAndCenter(UIDL uidl) {
 
+        if (uidl.hasAttribute("mze_top")) {
+            // move and zoom to extent
+            double top = uidl.getDoubleAttribute("mze_top");
+            double right = uidl.getDoubleAttribute("mze_right");
+            double bottom = uidl.getDoubleAttribute("mze_bottom");
+            double left = uidl.getDoubleAttribute("mze_left");
+            Bounds bounds = Bounds.create(left, bottom, right, top);
+            bounds.transform(DEFAULT_PROJECTION, map.getProjection());
+            map.moveAndZoomTo(bounds);
+            return;
+        }
+
         if (uidl.hasAttribute("ze_top")) {
             // zoom to extent
             double top = uidl.getDoubleAttribute("ze_top");
