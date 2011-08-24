@@ -222,7 +222,8 @@ public class VOpenLayersMap extends FlowPanel implements Container {
             double left = uidl.getDoubleAttribute("mze_left");
             Bounds bounds = Bounds.create(left, bottom, right, top);
             bounds.transform(DEFAULT_PROJECTION, map.getProjection());
-            map.moveAndZoomTo(bounds);
+            // map.moveAndZoomTo(bounds);
+            map.panAndZoomTo(bounds);
             return;
         }
 

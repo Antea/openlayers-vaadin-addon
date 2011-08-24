@@ -142,6 +142,10 @@ public class Map extends Widget {
         return getMap().getControls();
     }
 
+    public void panAndZoomTo(Bounds bounds) {
+        getMap().panAndZoomTo(bounds);
+    }
+
     public void moveAndZoomTo(Bounds bounds) {
         getMap().moveAndZoomTo(bounds);
     }
