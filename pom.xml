@@ -15,6 +15,15 @@
         <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
 
+    <distributionManagement>
+        <!-- Indirizzo web del site generato da Maven. -->
+        <repository>
+            <id>m2</id>
+            <name>Repository m2.antea.bogus</name>
+            <url>scp://deployer@m2.antea.bogus/srv/maven</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -164,7 +173,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin</artifactId>
-            <version>6.6.4</version>
+            <version>6.6.5</version>
             <scope>provided</scope>
         </dependency>
 	<!-- This is also used by gwt-maven-plugin to deduce GWT version number. -->
