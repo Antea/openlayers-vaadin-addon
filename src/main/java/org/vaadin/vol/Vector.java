@@ -32,7 +32,7 @@ public abstract class Vector extends AbstractComponent {
     /**
      * @return the custom style declaration assosicated with this Vector
      */
-    public Style setStyle() {
+    public Style getCustomStyle() {
         return style;
     }
 
