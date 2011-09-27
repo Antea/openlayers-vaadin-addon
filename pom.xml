@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.vaadin.vol</groupId>
     <artifactId>openlayers-wrapper</artifactId>
-    <version>0.8.0-ANTEA-SNAPSHOT</version>
+    <version>0.8.1-ANTEA-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>openLayers vaadin wrapper</name>
     
@@ -129,17 +129,6 @@
             </snapshots>
         </repository>
         <repository>
-            <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/
-            </url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
@@ -158,17 +147,6 @@
         <pluginRepository>
             <id>codehaus-snapshots</id>
             <url>http://nexus.codehaus.org/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/
-            </url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

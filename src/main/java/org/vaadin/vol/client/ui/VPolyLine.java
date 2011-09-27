@@ -27,7 +27,7 @@ public class VPolyLine extends VAbstractVector {
 		LineString lr = LineString.create(points);
 
 		JavaScriptObject style = null;
-		JavaScriptObject attributes = null;
+                JavaScriptObject attributes = getAttributes();
 		vector = Vector.create(lr, attributes, style);
 
 	}
