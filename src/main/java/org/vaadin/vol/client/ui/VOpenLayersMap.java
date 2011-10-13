@@ -31,9 +31,13 @@ public class VOpenLayersMap extends FlowPanel implements Container {
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-openlayersmap";
 
-    private static final Projection DEFAULT_PROJECTION = Projection
+    
+    /**
+     * Projection of coordinates passed from the serverside
+     */
+    private Projection serverSideProjection = Projection
             .get("EPSG:4326");
-
+    
     /** The client side widget identifier */
     protected String paintableId;
 
@@ -87,6 +91,10 @@ public class VOpenLayersMap extends FlowPanel implements Container {
         }
 
         immediate = uidl.hasAttribute("immediate");
+        
+        if(uidl.hasAttribute("projection")) {
+            serverSideProjection = Projection.get(uidl.getStringAttribute("projection"));
+        }
 
         if (uidl.hasAttribute("jsMapOptions")) {
             map.setMapInitOptions(uidl.getStringAttribute("jsMapOptions"));
@@ -102,8 +110,8 @@ public class VOpenLayersMap extends FlowPanel implements Container {
                         VConsole.log(" extent null");
                         return;
                     }
-                    Projection projection = map.getProjection();
-                    extent.transform(projection, DEFAULT_PROJECTION);
+                    Projection projection = getMap().getProjection();
+                    extent.transform(projection, getProjection());
                     client.updateVariable(paintableId, "left",
                             extent.getLeft(), false);
                     client.updateVariable(paintableId, "right",
@@ -137,7 +145,7 @@ public class VOpenLayersMap extends FlowPanel implements Container {
                     uidl.getDoubleAttribute("me_bottom"),
                     uidl.getDoubleAttribute("me_right"),
                     uidl.getDoubleAttribute("me_top"));
-            bounds.transform(DEFAULT_PROJECTION, map.getProjection());
+            bounds.transform(getProjection(), getMap().getProjection());
             map.setMaxExtent(bounds);
         }
 
@@ -163,7 +171,7 @@ public class VOpenLayersMap extends FlowPanel implements Container {
                     uidl.getDoubleAttribute("re_bottom"),
                     uidl.getDoubleAttribute("re_right"),
                     uidl.getDoubleAttribute("re_top"));
-            bounds.transform(DEFAULT_PROJECTION, map.getProjection());
+            bounds.transform(getProjection(), getMap().getProjection());
             map.setRestrictedExtent(bounds);
         }
 
@@ -221,7 +229,7 @@ public class VOpenLayersMap extends FlowPanel implements Container {
             double bottom = uidl.getDoubleAttribute("mze_bottom");
             double left = uidl.getDoubleAttribute("mze_left");
             Bounds bounds = Bounds.create(left, bottom, right, top);
-            bounds.transform(DEFAULT_PROJECTION, map.getProjection());
+            bounds.transform(getProjection(), getMap().getProjection());
             // map.moveAndZoomTo(bounds);
             map.panAndZoomTo(bounds);
             return;
@@ -234,7 +242,7 @@ public class VOpenLayersMap extends FlowPanel implements Container {
             double bottom = uidl.getDoubleAttribute("ze_bottom");
             double left = uidl.getDoubleAttribute("ze_left");
             Bounds bounds = Bounds.create(left, bottom, right, top);
-            bounds.transform(DEFAULT_PROJECTION, map.getProjection());
+            bounds.transform(getProjection(), getMap().getProjection());
             map.zoomToExtent(bounds);
             return;
         }
@@ -253,8 +261,8 @@ public class VOpenLayersMap extends FlowPanel implements Container {
             double lon = uidl.getDoubleAttribute("clon");
             LonLat lonLat = LonLat.create(lon, lat);
             // expect center point to be in WSG84
-            Projection projection = map.getProjection();
-            lonLat.transform(DEFAULT_PROJECTION, projection);
+            Projection projection = getMap().getProjection();
+            lonLat.transform(getProjection(), projection);
             map.setCenter(lonLat, zoom);
         }
     }
@@ -285,5 +293,13 @@ public class VOpenLayersMap extends FlowPanel implements Container {
 
     public Map getMap() {
         return map;
+    }
+
+    public Projection getProjection() {
+        return serverSideProjection;
+    }
+
+    public void setProjection(Projection projection) {
+        this.serverSideProjection = projection;
     }
 }
