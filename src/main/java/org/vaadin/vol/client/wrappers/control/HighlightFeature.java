@@ -1,6 +1,6 @@
 package org.vaadin.vol.client.wrappers.control;
 
-import org.vaadin.vol.client.wrappers.Vector;
+import org.vaadin.vol.client.wrappers.GwtOlHandler;
 import org.vaadin.vol.client.wrappers.layer.Layer;
 
 public class HighlightFeature extends Control {
@@ -9,31 +9,44 @@ public class HighlightFeature extends Control {
 
     public native static HighlightFeature create(Layer targetLayer, String renderIntent)
     /*-{
-    	var o = {
+    	var options = {
            hover: true,
            highlightOnly: true,
            renderIntent: renderIntent
     	}
         
-    	return new $wnd.OpenLayers.Control.SelectFeature(targetLayer, o);
+    	return new $wnd.OpenLayers.Control.SelectFeature(targetLayer, options);
     }-*/;
 
     public static HighlightFeature create(Layer targetLayer) {
         return create(targetLayer, "temporary");
     }
+ 
+    public final void registerBeforeHighlightlistener(GwtOlHandler beforeHighlightHandler) {
+        registerHandler("beforefeaturehighlighted", beforeHighlightHandler);
+    }
 
-    public final native void unselectAll()
-    /*-{
-        this.unselectAll();
-    }-*/;
+    public final void registerHighlightlistener(GwtOlHandler highlightHandler) {
+        registerHandler("featurehighlighted", highlightHandler);
+    }
 
-    public final native void select(Vector vector)
-    /*-{
-        this.select(vector);
-    }-*/;
+    public final void registerUnhighlightlistener(GwtOlHandler unhighlightHandler) {
+        registerHandler("featureunhighlighted", unhighlightHandler);
+    }
 
-    public final native void highlight(Vector vector)
+    /**
+     * Cut & paste da AbstractOpenLayersWrapper#registerHandler
+     * 
+     * @see AbstractOpenLayersWrapper
+     * @param eventName
+     * @param handler 
+     */
+    private native final void registerHandler(String eventName, GwtOlHandler handler) 
     /*-{
-        this.highlight(vector);
+        var handlerCaller = function() {
+            $entry(handler.@org.vaadin.vol.client.wrappers.GwtOlHandler::onEvent(Lcom/google/gwt/core/client/JsArray;)(arguments));
+        };
+        this.events.addEventType(eventName);
+        this.events.register(eventName, this, handlerCaller);
     }-*/;
 }
