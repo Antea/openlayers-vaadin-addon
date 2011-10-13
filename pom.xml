@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.vaadin.vol</groupId>
     <artifactId>openlayers-wrapper</artifactId>
-    <version>0.8.1-ANTEA-SNAPSHOT</version>
+    <version>0.9.0-ANTEA-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>openLayers vaadin wrapper</name>
     
@@ -192,6 +192,12 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+            <version>8.0.1.v20110908</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
