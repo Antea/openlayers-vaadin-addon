@@ -275,7 +275,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             }
 
             if (!"NONE".equals(newHighlightMode)) {
-                hoverFeature = HighlightFeature.create(vectors);
+                hoverFeature = createHighlightFeature(vectors, newHighlightMode);
                 getMap().addControl(hoverFeature);
                 hoverFeature.activate();
             }
@@ -294,7 +294,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             }
 
             if (!"NONE".equals(newSelectionMode)) {
-                selectFeature = SelectFeature.create(vectors);
+                selectFeature = createSelectFeature(vectors, newSelectionMode);
                 getMap().addControl(selectFeature);
                 selectFeature.activate();
             }
@@ -425,4 +425,11 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         return null;
     }
 
+    protected SelectFeature createSelectFeature(VectorLayer layer, String selectMode) {
+        return SelectFeature.create(layer);
+    }
+
+    protected HighlightFeature createHighlightFeature(VectorLayer layer, String highlightMode) {
+        return HighlightFeature.create(layer);
+    }
 }

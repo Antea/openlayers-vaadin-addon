@@ -22,15 +22,15 @@ public class HighlightFeature extends Control {
         return create(targetLayer, "temporary");
     }
  
-    public final void registerBeforeHighlightlistener(GwtOlHandler beforeHighlightHandler) {
+    public final void registerBeforeHighlightListener(GwtOlHandler beforeHighlightHandler) {
         registerHandler("beforefeaturehighlighted", beforeHighlightHandler);
     }
 
-    public final void registerHighlightlistener(GwtOlHandler highlightHandler) {
+    public final void registerHighlightListener(GwtOlHandler highlightHandler) {
         registerHandler("featurehighlighted", highlightHandler);
     }
 
-    public final void registerUnhighlightlistener(GwtOlHandler unhighlightHandler) {
+    public final void registerUnhighlightListener(GwtOlHandler unhighlightHandler) {
         registerHandler("featureunhighlighted", unhighlightHandler);
     }
 
