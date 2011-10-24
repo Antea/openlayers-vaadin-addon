@@ -41,63 +41,68 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
     private Control df;
     private GwtOlHandler _fAddedListener;
     private boolean updating;
-    private ApplicationConnection client;
+    protected ApplicationConnection client;
     private String displayName;
     private GwtOlHandler _fModifiedListener;
 
     public VectorLayer getLayer() {
         if (vectors == null) {
-            vectors = VectorLayer.create(displayName);
-            vectors.registerHandler("featureadded", getFeatureAddedListener());
-            vectors.registerHandler("featuremodified",
-                    getFeatureModifiedListener());
-            vectors.registerHandler("afterfeaturemodified", new GwtOlHandler() {
-                public void onEvent(JsArray arguments) {
-                    client.sendPendingVariableChanges();
-                }
-            });
-            vectors.registerHandler("featureselected", new GwtOlHandler() {
-                public void onEvent(JsArray arguments) {
-                    if (client.hasEventListeners(VVectorLayer.this, "vsel")) {
-                        ValueMap javaScriptObject = arguments.get(0).cast();
-                        Vector vector = javaScriptObject.getValueMap("feature")
-                                .cast();
-                        for (Widget w : getChildren()) {
-                            VAbstractVector v = (VAbstractVector) w;
-                            if (v.getVector() == vector) {
-                                client.updateVariable(paintableId, "vsel", v,
-                                        true);
-                            }
-                        }
-                    }
-                }
-            });
-
-            vectors.registerHandler("featureunselected", new GwtOlHandler() {
-                public void onEvent(JsArray arguments) {
-                    ValueMap javaScriptObject = arguments.get(0).cast();
-                    Vector vector = javaScriptObject.getValueMap("feature")
-                            .cast();
-                    for (Widget w : getChildren()) {
-                        VAbstractVector v = (VAbstractVector) w;
-                        if (v.getVector() == vector) {
-                            v.revertDefaultIntent();
-                            if (client.hasEventListeners(VVectorLayer.this,
-                                    "vusel")) {
-                                client.updateVariable(paintableId, "vusel", v,
-                                        true);
-                                break;
-                            }
-                        }
-                    }
-                }
-            });
-
+            vectors = createLayer();
         }
         return vectors;
     }
 
-    private GwtOlHandler getFeatureModifiedListener() {
+    protected VectorLayer createLayer() {
+        VectorLayer vectors = VectorLayer.create(displayName);
+        vectors.registerHandler("featureadded", getFeatureAddedListener());
+        vectors.registerHandler("featuremodified",
+                getFeatureModifiedListener());
+        vectors.registerHandler("afterfeaturemodified", new GwtOlHandler() {
+            public void onEvent(JsArray arguments) {
+                client.sendPendingVariableChanges();
+            }
+        });
+        vectors.registerHandler("featureselected", new GwtOlHandler() {
+            public void onEvent(JsArray arguments) {
+                if (client.hasEventListeners(VVectorLayer.this, "vsel")) {
+                    ValueMap javaScriptObject = arguments.get(0).cast();
+                        Vector vector = javaScriptObject.getValueMap("feature")
+                                .cast();
+                    for (Widget w : getChildren()) {
+                        VAbstractVector v = (VAbstractVector) w;
+                        if (v.getVector() == vector) {
+                            client.updateVariable(paintableId, "vsel", v,
+                                    true);
+                        }
+                    }
+                }
+            }
+        });
+
+        vectors.registerHandler("featureunselected", new GwtOlHandler() {
+            public void onEvent(JsArray arguments) {
+                ValueMap javaScriptObject = arguments.get(0).cast();
+                    Vector vector = javaScriptObject.getValueMap("feature")
+                            .cast();
+                for (Widget w : getChildren()) {
+                    VAbstractVector v = (VAbstractVector) w;
+                    if (v.getVector() == vector) {
+                        v.revertDefaultIntent();
+                        if (client.hasEventListeners(VVectorLayer.this,
+                                "vusel")) {
+                            client.updateVariable(paintableId, "vusel", v,
+                                    true);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        return vectors;
+    }
+
+    protected GwtOlHandler getFeatureModifiedListener() {
         if (_fModifiedListener == null) {
             _fModifiedListener = new GwtOlHandler() {
 
@@ -155,7 +160,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         return _fModifiedListener;
     }
 
-    private String paintableId;
+    protected String paintableId;
     private Vector lastNewDrawing;
     private boolean added = false;
     private String currentSelectionMode;
@@ -389,7 +394,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         getMap().removeLayer(getLayer());
     }
 
-    private Map getMap() {
+    protected Map getMap() {
         return getVMap().getMap();
     }
 
