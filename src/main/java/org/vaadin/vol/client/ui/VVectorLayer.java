@@ -42,15 +42,25 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
     private Control df;
     private GwtOlHandler _fAddedListener;
     private boolean updating;
-    private ApplicationConnection client;
-    private String displayName;
+    protected ApplicationConnection client;
+    protected String displayName;
     private GwtOlHandler _fModifiedListener;
 
     private boolean immediate;
 
     public VectorLayer getLayer() {
         if (vectors == null) {
-            vectors = VectorLayer.create(displayName);
+            vectors = createLayer();
+            registerHandlers(vectors);
+        }
+        return vectors;
+    }
+
+    protected VectorLayer createLayer() {
+            return VectorLayer.create(displayName);
+    }
+
+    protected void registerHandlers(VectorLayer vectors){
             vectors.registerHandler("featureadded", getFeatureAddedListener());
             vectors.registerHandler("featuremodified",
                     getFeatureModifiedListener());
@@ -116,12 +126,9 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                     }
                 }
             });
-
-        }
-        return vectors;
     }
 
-    private GwtOlHandler getFeatureModifiedListener() {
+    protected GwtOlHandler getFeatureModifiedListener() {
         if (_fModifiedListener == null) {
             _fModifiedListener = new GwtOlHandler() {
 
@@ -180,7 +187,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         return _fModifiedListener;
     }
 
-    private String paintableId;
+    protected String paintableId;
     private Vector lastNewDrawing;
     private boolean added = false;
     private String currentSelectionMode;
@@ -497,7 +504,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         getMap().removeLayer(getLayer());
     }
 
-    private Map getMap() {
+    protected Map getMap() {
         return getVMap().getMap();
     }
 
