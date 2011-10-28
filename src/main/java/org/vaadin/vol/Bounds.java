@@ -23,7 +23,7 @@ public class Bounds {
 	 * Init value are first point check and speed up bounds computing with huge
 	 * arrays
 	 */
-	public Bounds(float top, float left, float bottom, float right) {
+	public Bounds(final double top, final double left, final double bottom, final double right) {
 		this.bottom = bottom;
 		this.top = top;
 		this.right = right;
@@ -171,4 +171,11 @@ public class Bounds {
 		target.addAttribute(string + "_left", left);
 	}
 
+        public double getWidth() {
+            return right -left;
+        }
+
+        public double getHeight() {
+            return top - bottom;
+        }
 }
