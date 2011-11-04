@@ -42,7 +42,7 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
     private SelectionMode selectionMode = SelectionMode.NONE;
 
     public enum DrawingMode {
-        NONE, LINE, AREA, POINT, MODIFY
+        NONE, LINE, AREA, POINT, MODIFY, TRANSFORM
     }
 
     private DrawingMode drawindMode = DrawingMode.NONE;
@@ -218,6 +218,26 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
                 VectorModifiedListener.method);
     }
 
+    public interface VectorTransformedListener {
+
+        public final Method method = ReflectTools.findMethod(
+                VectorTransformedListener.class, "vectorTransformed",
+                VectorTransformedEvent.class);
+
+        public void vectorTransformed(VectorTransformedEvent event);
+
+    }
+
+    public void addListener(VectorTransformedListener listener) {
+        addListener(VectorTransformedEvent.class, listener,
+                VectorTransformedListener.method);
+    }
+
+    public void removeListener(VectorTransformedListener listener) {
+        removeListener(VectorTransformedEvent.class, listener,
+                VectorTransformedListener.method);
+    }
+
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
@@ -292,6 +312,60 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
             return vector;
         }
 
+    }
+
+    public class VectorTransformedEvent extends Event {
+
+        private Vector vector;
+        private double scale;
+        private double ratio;
+        private double rotation;
+        private Bounds bounds;
+
+        public VectorTransformedEvent(Component source, Vector vector) {
+            super(source);
+            setVector(vector);
+        }
+
+        private void setVector(Vector vector) {
+            this.vector = vector;
+        }
+
+        public Vector getVector() {
+            return vector;
+        }
+
+        public double getRatio() {
+            return ratio;
+        }
+
+        public void setRatio(double ratio) {
+            this.ratio = ratio;
+        }
+
+        public double getRotation() {
+            return rotation;
+        }
+
+        public void setRotation(double rotation) {
+            this.rotation = rotation;
+        }
+
+        public double getScale() {
+            return scale;
+        }
+
+        public void setScale(double scale) {
+            this.scale = scale;
+        }
+
+        public void setBounds(Bounds bounds) {
+            this.bounds = bounds;
+        }
+
+        public Bounds getBounds() {
+            return bounds;
+        }
     }
 
     public interface VectorSelectedListener {

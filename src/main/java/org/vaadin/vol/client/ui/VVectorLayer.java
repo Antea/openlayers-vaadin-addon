@@ -34,6 +34,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import org.vaadin.vol.client.wrappers.control.HighlightFeature;
+import org.vaadin.vol.client.wrappers.control.TransformFeature;
 
 public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
@@ -393,6 +394,8 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                 df = DrawFeature.create(getLayer(), PathHandler.get());
             } else if (drawingMode == "MODIFY") {
                 df = ModifyFeature.create(getLayer());
+            } else if (drawingMode == "TRANSFORM") {
+                df = createTransformFeature(getLayer());
             } else if (drawingMode == "POINT") {
                 df = DrawFeature.create(getLayer(), PointHandler.get());
             }
@@ -565,5 +568,9 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
     protected HighlightFeature createHighlightFeature(VectorLayer layer, String highlightMode) {
         return HighlightFeature.create(layer);
+    }
+
+    protected TransformFeature createTransformFeature(VectorLayer layer) {
+        return TransformFeature.create(layer);
     }
 }
