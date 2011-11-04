@@ -393,7 +393,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             } else if (drawingMode == "LINE") {
                 df = DrawFeature.create(getLayer(), PathHandler.get());
             } else if (drawingMode == "MODIFY") {
-                df = ModifyFeature.create(getLayer());
+                df = createModifyFeature(getLayer());
             } else if (drawingMode == "TRANSFORM") {
                 df = createTransformFeature(getLayer());
             } else if (drawingMode == "POINT") {
@@ -568,6 +568,10 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
     protected HighlightFeature createHighlightFeature(VectorLayer layer, String highlightMode) {
         return HighlightFeature.create(layer);
+    }
+
+    protected ModifyFeature createModifyFeature(VectorLayer layer) {
+        return ModifyFeature.create(layer);
     }
 
     protected TransformFeature createTransformFeature(VectorLayer layer) {
