@@ -276,63 +276,45 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
         return selectionMode;
     }
 
-    public class VectorDrawnEvent extends Event {
-
+    private abstract class VectorEvent extends Event {
         private Vector vector;
+
+        public VectorEvent(Component source, Vector vector) {
+            super(source);
+            setVector(vector);
+        }
+
+        private void setVector(Vector vector) {
+            this.vector = vector;
+        }
+
+        public Vector getVector() {
+            return vector;
+        }
+}
+    public class VectorDrawnEvent extends VectorEvent {
 
         public VectorDrawnEvent(Component source, Vector vector) {
-            super(source);
-            setVector(vector);
+            super(source,vector);
         }
-
-        private void setVector(Vector vector) {
-            this.vector = vector;
-        }
-
-        public Vector getVector() {
-            return vector;
-        }
-
     }
 
-    public class VectorModifiedEvent extends Event {
-
-        private Vector vector;
+    public class VectorModifiedEvent extends VectorEvent {
 
         public VectorModifiedEvent(Component source, Vector vector) {
-            super(source);
-            setVector(vector);
+            super(source,vector);
         }
-
-        private void setVector(Vector vector) {
-            this.vector = vector;
-        }
-
-        public Vector getVector() {
-            return vector;
-        }
-
     }
 
-    public class VectorTransformedEvent extends Event {
+    public class VectorTransformedEvent extends VectorEvent {
 
-        private Vector vector;
         private double scale;
         private double ratio;
         private double rotation;
         private Bounds bounds;
 
         public VectorTransformedEvent(Component source, Vector vector) {
-            super(source);
-            setVector(vector);
-        }
-
-        private void setVector(Vector vector) {
-            this.vector = vector;
-        }
-
-        public Vector getVector() {
-            return vector;
+            super(source,vector);
         }
 
         public double getRatio() {
@@ -390,23 +372,11 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
                 VectorSelectedEvent.class, listener);
     }
 
-    public class VectorSelectedEvent extends Event {
-
-        private Vector vector;
+    public class VectorSelectedEvent extends VectorEvent {
 
         public VectorSelectedEvent(Component source, Vector vector) {
-            super(source);
-            setVector(vector);
+            super(source, vector);
         }
-
-        private void setVector(Vector vector) {
-            this.vector = vector;
-        }
-
-        public Vector getVector() {
-            return vector;
-        }
-
     }
 
     public interface VectorUnSelectedListener {
@@ -449,23 +419,11 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
         }
     }
 
-    public class VectorUnSelectedEvent extends Event {
-
-        private Vector vector;
+    public class VectorUnSelectedEvent extends VectorEvent {
 
         public VectorUnSelectedEvent(Component source, Vector vector) {
-            super(source);
-            setVector(vector);
+            super(source,vector);
         }
-
-        private void setVector(Vector vector) {
-            this.vector = vector;
-        }
-
-        public Vector getVector() {
-            return vector;
-        }
-
     }
 
 }
