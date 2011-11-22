@@ -225,7 +225,7 @@ public class OpenLayersMap extends AbstractComponentContainer {
      * @return
      */
     public Bounds getExtend() {
-        return new Bounds((float) top, (float) left, (float) right, (float) bottom);
+        return new Bounds(top, left, bottom, right);
     }
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
