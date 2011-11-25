@@ -14,11 +14,6 @@ public class LineString extends Curve {
 		return new $wnd.OpenLayers.Geometry.LineString($wnd.gwt_openlayers_util.convertToArray(points));
 	}-*/;
 
-	public native final JsArray<Point> getAllVertices() 
-	/*-{
-		return this.getVertices();
-	}-*/;
-
 	public native final JsArray<Point> getEndPoints() 
 	/*-{
 		return this.getVertices(true);

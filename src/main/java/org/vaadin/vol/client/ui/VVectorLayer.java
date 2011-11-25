@@ -146,7 +146,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                         boolean isLineString = true; // TODO
                         if (isLineString) {
                             LineString ls = geometry.cast();
-                            JsArray<Point> allVertices = ls.getAllVertices();
+                            JsArray<Point> allVertices = ls.getVertices();
                             client.updateVariable(paintableId,
                                     "newVerticesProj", getMap().getProjection()
                                             .toString(), false);
@@ -210,7 +210,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
                         if (drawingMode == "AREA" || drawingMode == "LINE") {
                             LineString ls = geometry.cast();
-                            JsArray<Point> allVertices = ls.getAllVertices();
+                            JsArray<Point> allVertices = ls.getVertices();
                             // TODO this can be removed??
                             client.updateVariable(paintableId,
                                     "newVerticesProj", getMap().getProjection()
