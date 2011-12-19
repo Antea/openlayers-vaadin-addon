@@ -165,7 +165,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin</artifactId>
-            <version>6.6.5</version>
+            <version>6.7.3</version>
             <scope>provided</scope>
         </dependency>
 	<!-- This is also used by gwt-maven-plugin to deduce GWT version number. -->
@@ -197,7 +197,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlets</artifactId>
-            <version>8.0.1.v20110908</version>
+            <version>LATEST</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

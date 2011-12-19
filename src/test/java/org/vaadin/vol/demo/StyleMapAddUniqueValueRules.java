@@ -1,7 +1,6 @@
 package org.vaadin.vol.demo;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,6 +23,7 @@ import org.vaadin.vol.Popup.PopupStyle;
 import org.vaadin.vol.RenderIntent;
 import org.vaadin.vol.Style;
 import org.vaadin.vol.StyleMap;
+import org.vaadin.vol.Symbolizer;
 import org.vaadin.vol.Vector;
 import org.vaadin.vol.VectorLayer;
 import org.vaadin.vol.VectorLayer.DrawingMode;
@@ -49,18 +49,19 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Demo extends AbstractVOLTest {
+@SuppressWarnings("serial")
+public class StyleMapAddUniqueValueRules extends AbstractVOLTest {
     private HorizontalLayout controls;
-    
+
     @Override
     public String getDescription() {
-        return "Simple example demonstrating some base layers and basic vector usage.";
+        return "Example how to use complex attribute based styling.";
     }
-    
+
     @Override
     protected void setup() {
         super.setup();
-        ((VerticalLayout)getContent()).addComponentAsFirst(controls);
+        ((VerticalLayout) getContent()).addComponentAsFirst(controls);
     }
 
     @Override
@@ -78,37 +79,6 @@ public class Demo extends AbstractVOLTest {
 
         GoogleStreetMapLayer googleStreets = new GoogleStreetMapLayer();
         GoogleSatelliteMapLayer googleSatellite = new GoogleSatelliteMapLayer();
-
-        // Defining a WMS layer as in OL examples
-        // WebMapServiceLayer wms = new WebMapServiceLayer();
-        // wms.setUri("http://vmap0.tiles.osgeo.org/wms/vmap0");
-        // wms.setLayers("basic");
-        // wms.setServiceType("wms");
-        // wms.setDisplayName("OpenLayers WMS");
-        // wms.setBaseLayer(true);
-        // map.addLayer(wms);
-
-        // OL example data from canada
-        // var dm_wms = new OpenLayers.Layer.WMS(
-        // "Canadian Data",
-        // "http://www2.dmsolutions.ca/cgi-bin/mswms_gmap",
-        // {
-        // layers: "bathymetry,land_fn,park,drain_fn,drainage," +
-        // "prov_bound,fedlimit,rail,road,popplace",
-        // transparent: "true",
-        // format: "image/png"
-        // },
-        // {isBaseLayer: false, visibility: false}
-        // );
-
-        // wms = new WebMapServiceLayer();
-        // wms.setUri("http://www2.dmsolutions.ca/cgi-bin/mswms_gmap");
-        // wms.setLayers("bathymetry,land_fn,park,drain_fn,drainage,"
-        // + "prov_bound,fedlimit,rail,road,popplace");
-        // wms.setFormat("image/png");
-        // wms.setDisplayName("Canadian data");
-        // wms.setBaseLayer(false);
-        // map.addLayer(wms);
 
         MapTilerLayer mapTilerLayer = null;
         try {
@@ -137,9 +107,12 @@ public class Demo extends AbstractVOLTest {
             public void vectorSelected(VectorSelectedEvent event) {
                 Vector vector = event.getVector();
                 Window window = vectorLayer.getWindow();
+                // vectorLayer.getWindow().showNotification(
+                // "Selected vector with points "
+                // + Arrays.deepToString(vector.getPoints()) );
                 vectorLayer.getWindow().showNotification(
-                        "Selected vector with points "
-                                + Arrays.deepToString(vector.getPoints()));
+                        "Selected vector attributes "
+                                + (vector.getAttributes().toString()));
             }
         });
 
@@ -157,7 +130,7 @@ public class Demo extends AbstractVOLTest {
 
         Style vaadinColors = new Style();
         vaadinColors.setStrokeColor("#1cffff");
-        vaadinColors.setFillColor("#adfffc");
+        vaadinColors.setFillColor("#0000ff");
         vaadinColors.setFillOpacity(0.4);
         vaadinColors.setStrokeWidth(3);
         area.setCustomStyle(vaadinColors);
@@ -166,6 +139,7 @@ public class Demo extends AbstractVOLTest {
         /* Set stroke color to green, otherwise like default style */
         defaultstyle.extendCoreStyle("default");
         defaultstyle.setStrokeColor("#00b963");
+        defaultstyle.setFillColor("#00ff00");
 
         // Make borders of selected graphs bigger
         Style selectStyle = new Style();
@@ -194,21 +168,23 @@ public class Demo extends AbstractVOLTest {
         // Add styled PointVectors to area corners, styling with styleNames
         Style style = new Style();
         style.setFill(true);
-        style.setFillColor("#ff000e");
+        // style.setFillColor("#0000ff"); //
         style.setFillOpacity(0.8);
         style.setStroke(false);
         // style.setPointRadius(30);
-        style.setPointRadiusByAttribute("pointRadius");
+        // style.setPointRadiusByAttribute("pointRadius"); //
         stylemap.setStyle(new RenderIntent("red"), style);
         Style markerStyle = new Style();
-        markerStyle
-                .setExternalGraphic(getURL()
-                        + "../VAADIN/widgetsets/org.vaadin.vol.demo.VolExampleAppWidgetset/img/marker.png");
+        // markerStyle
+        // .setExternalGraphic(getURL()
+        // +
+        // "../VAADIN/widgetsets/org.vaadin.vol.demo.VolExampleAppWidgetset/img/marker.png");
         markerStyle.setGraphicZIndex(11);
         markerStyle.setGraphicSize(16, 21);
-        markerStyle
-                .setBackgroundGraphic(getURL()
-                        + "../VAADIN/widgetsets/org.vaadin.vol.demo.VolExampleAppWidgetset/img/marker_shadow.png");
+        // markerStyle
+        // .setBackgroundGraphic(getURL()
+        // +
+        // "../VAADIN/widgetsets/org.vaadin.vol.demo.VolExampleAppWidgetset/img/marker_shadow.png");
         markerStyle.setBackgroundYOffset(-7);
         markerStyle.setBackgroundXOffset(0);
         markerStyle.setBackgroundGraphicZIndex(10);
@@ -217,18 +193,45 @@ public class Demo extends AbstractVOLTest {
         markerStyle.setPointRadius(10);
         stylemap.setStyle(new RenderIntent("marker"), markerStyle);
 
+        Symbolizer symbolizer_lookup = new Symbolizer();
+        Symbolizer symb = new Symbolizer();
+        symb.setProperty("pointRadius", 20);
+        symb.setProperty("fillColor", "#ff0000");
+        symbolizer_lookup.setProperty("size0", symb);
+        // symbolizer_lookup.setProperty("0", symb);
+
+        symb = new Symbolizer();
+        symb.setProperty("pointRadius", 40);
+        symb.setProperty("fillColor", "#ffff00");
+        symbolizer_lookup.setProperty("size1", symb);
+        // symbolizer_lookup.setProperty("1", symb);
+
+        symb = new Symbolizer();
+        symb.setProperty("pointRadius", 10);
+        symb.setProperty("fillColor", "#ff00ff");
+        symbolizer_lookup.setProperty("size2", symb);
+        // symbolizer_lookup.setProperty("2", symb);
+
+        stylemap.addUniqueValueRules(new RenderIntent("red"), "size",
+                symbolizer_lookup, null);
+        stylemap.addUniqueValueRules(new RenderIntent("marker"), "size",
+                symbolizer_lookup, null);
+
         for (int i = 0; i < points.length; i++) {
             PointVector pointVector = new PointVector(points[i].getLon(),
                     points[i].getLat());
+            Attributes attr = new Attributes();
+
+            attr.setProperty("size", "size" + String.valueOf(i));
+            // attr.setProperty("size", i);
+            pointVector.setAttributes(attr);
+
             if (i == 0) {
                 pointVector.setStyleName("marker");
             } else {
                 pointVector.setStyleName("red");
-                Attributes attr = new Attributes();
-                attr.setProperty("pointRadius", (i + 1) * 10);
-                pointVector.setAttributes(attr);
-
             }
+
             vectorLayer.addVector(pointVector);
         }
 
@@ -265,9 +268,9 @@ public class Demo extends AbstractVOLTest {
         map.setCenter(22.30, 60.452);
         map.setZoom(15);
 
-        map.setSizeFull();
-        // map.setWidth("600px");
-        // map.setHeight("400px");
+        // map.setSizeFull();
+        map.setWidth("800px");
+        map.setHeight("600px");
 
         OptionGroup drawingMode = new OptionGroup();
         for (DrawingMode l : VectorLayer.DrawingMode.values()) {
@@ -315,7 +318,7 @@ public class Demo extends AbstractVOLTest {
         // map.addComponent(wms);
         // map.addLayer(mapTilerLayer);
         map.addLayer(vectorLayer);
-//         map.addLayer(markerLayer);
+        // map.addLayer(markerLayer);
 
         controls = new HorizontalLayout();
         controls.addComponent(drawingMode);
@@ -359,8 +362,9 @@ public class Demo extends AbstractVOLTest {
 
         controls.addComponent(moveToTMSExample);
 
-        return map;    }
-    
+        return map;
+    }
+
     /**
      * An example how to zoom the map so that it covers given points.
      * 
@@ -383,6 +387,5 @@ public class Demo extends AbstractVOLTest {
         Bounds bounds = new Bounds(points);
         map.setRestrictedExtent(bounds);
     }
-
 
 }

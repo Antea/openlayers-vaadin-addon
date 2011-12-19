@@ -18,14 +18,14 @@ public class VectorLayer extends Layer {
     public native final static VectorLayer create(String displayName)
     /*-{
 
-        var defaultStyle = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['default']);
-        defaultStyle.fillOpacity = 0.2;
-        defaultStyle.graphicOpacity = 1;
+        var layer_style = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['default']);
+        layer_style.fillOpacity = 0.2;
+        layer_style.graphicOpacity = 1;
         var selectStyle = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['select']);
         var temporaryStyle = $wnd.OpenLayers.Util.extend({}, $wnd.OpenLayers.Feature.Vector.style['temporary']);
-    	
+
         var styles = new $wnd.OpenLayers.StyleMap({
-            "default" : defaultStyle,
+            "default" : layer_style,
             "select" : selectStyle,
             "temporary" : temporaryStyle
         });
@@ -38,7 +38,8 @@ public class VectorLayer extends Layer {
             JavaScriptObject stylemap)
     /*-{
     	_myvector_layer = new $wnd.OpenLayers.Layer.Vector(displayName);
-    	_myvector_layer.styleMap = stylemap;
+    	if(stylemap) 
+    		_myvector_layer.styleMap = stylemap;
     	return _myvector_layer;
     	
     }-*/;
@@ -47,12 +48,22 @@ public class VectorLayer extends Layer {
     /*-{
     	this.removeFeatures(vector);
     }-*/;
+    
+    public native final void eraseFeature(Vector vector)
+    /*-{
+    	this.eraseFeatures(vector);
+    }-*/;
 
     public native final void addFeature(Vector vector)
     /*-{
     	this.addFeatures(vector);
     }-*/;
 
+    public native final void drawFeature(Vector vector)
+    /*-{
+    	this.drawFeature(vector);
+    }-*/;
+    
     public native final void redraw()
     /*-{
         this.redraw();
