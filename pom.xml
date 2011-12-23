@@ -27,7 +27,7 @@
     <scm>
         <connection>scm:git:ssh://${user.name}@repo.antea.bogus/srv/git/openlayers-vaadin-wrapper.git/</connection>
         <developerConnection>scm:git:ssh://${user.name}@repo.antea.bogus/srv/git/openlayers-vaadin-wrapper.git/</developerConnection>
-        <url>http://repo.antea.bogus:8081/?p=bbox.git</url>
+        <url>http://repo.antea.bogus:8081/?p=openlayers-vaadin-wrapper.git</url>
     </scm>
 
     <build>
@@ -185,25 +185,25 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>LATEST</version>
+            <version>8.0.4.v20111024</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>LATEST</version>
+            <version>8.0.4.v20111024</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>LATEST</version>
+            <version>8.0.4.v20111024</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlets</artifactId>
-            <version>LATEST</version>
+            <version>8.0.4.v20111024</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
