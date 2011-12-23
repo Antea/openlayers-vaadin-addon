@@ -23,6 +23,12 @@
             <url>scp://deployer@m2.antea.bogus/srv/maven</url>
         </repository>
     </distributionManagement>
+    
+    <scm>
+        <connection>scm:git:ssh://${user.name}@repo.antea.bogus/srv/git/openlayers-vaadin-wrapper.git/</connection>
+        <developerConnection>scm:git:ssh://${user.name}@repo.antea.bogus/srv/git/openlayers-vaadin-wrapper.git/</developerConnection>
+        <url>http://repo.antea.bogus:8081/?p=bbox.git</url>
+    </scm>
 
     <build>
         <plugins>
