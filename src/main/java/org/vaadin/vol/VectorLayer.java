@@ -28,6 +28,7 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
     }
 
     private Vector selectedVector;
+    private Vector unselectedVector = null;
 
     public enum HighlightMode {
         NONE, DEFAULT
@@ -59,6 +60,10 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
         target.addAttribute("hmode", highlightMode.toString());
         if (selectedVector != null) {
             target.addAttribute("svector", selectedVector);
+        }
+        if (unselectedVector != null) {
+            target.addAttribute("uvector", unselectedVector);
+            unselectedVector = null;
         }
 
         if (stylemap != null) {
@@ -96,8 +101,9 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
         vectors.remove(c);
         super.removeComponent(c);
         if (selectedVector == c) {
+            unselectedVector = selectedVector;
             selectedVector = null;
-            fireEvent(new VectorUnSelectedEvent(this, (Vector) c));
+            fireEvent(new VectorUnSelectedEvent(this, unselectedVector));
         }
         requestRepaint();
     }
@@ -153,9 +159,9 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
             if (selectedVector == object) {
                 selectedVector = null;
             }
-            VectorUnSelectedEvent vectorSelectedEvent = new VectorUnSelectedEvent(
+            VectorUnSelectedEvent vectorUnselectedEvent = new VectorUnSelectedEvent(
                     this, object);
-            fireEvent(vectorSelectedEvent);
+            fireEvent(vectorUnselectedEvent);
         }
         if (variables.containsKey("vsel")) {
             Vector object = (Vector) variables.get("vsel");
@@ -408,12 +414,13 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
 
     public void setSelectedVector(Vector selectedVector) {
         if (this.selectedVector != selectedVector) {
-            if (this.selectedVector != null) {
-                fireEvent(new VectorUnSelectedEvent(this, this.selectedVector));
+            this.unselectedVector = this.selectedVector;
+            if (this.unselectedVector != null) {
+                fireEvent(new VectorUnSelectedEvent(this, this.unselectedVector));
             }
             this.selectedVector = selectedVector;
-            if (selectedVector != null) {
-                fireEvent(new VectorSelectedEvent(this, selectedVector));
+            if (this.selectedVector != null) {
+                fireEvent(new VectorSelectedEvent(this, this.selectedVector));
             }
             requestRepaint();
         }

@@ -336,6 +336,18 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
             currentSelectionMode = newSelectionMode;
         }
+
+        // Vector unselect support
+        if (currentSelectionMode != "NONE") {
+            if (layer.hasAttribute("uvector")) {
+                VAbstractVector unselectedVector = (VAbstractVector) layer
+                        .getPaintableAttribute("uvector", client);
+                if (unselectedVector != null) {
+                    selectFeature.unselect(unselectedVector.getVector());
+                }
+            }
+        }
+
         if (currentSelectionMode != "NONE" || drawingMode == "MODIFY") {
             if (layer.hasAttribute("svector")) {
                 VAbstractVector selectedVector = (VAbstractVector) layer
