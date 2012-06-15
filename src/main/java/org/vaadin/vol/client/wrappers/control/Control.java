@@ -1,7 +1,5 @@
 package org.vaadin.vol.client.wrappers.control;
 
-import org.vaadin.vol.client.wrappers.Map;
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 public abstract class Control extends JavaScriptObject {
@@ -25,17 +23,11 @@ public abstract class Control extends JavaScriptObject {
 	 * @param map
 	 * @return
 	 */
-	public static Control getControlByName(String name, Map map) {
-//		if("OverviewMap".equals(name)) {
-//			return OverviewMap.create(map.getBaseLayer());
-//		}
-		return getControlByName(name);
-	}
-
-	private native static final Control getControlByName(String name) 
+	public native static final Control getControlByName(String name, String options)
 	/*-{
 		if($wnd.OpenLayers.Control[name]) {
-			return new $wnd.OpenLayers.Control[name]();
+                        var o = options ? eval("o = " +options+ ";") : {};
+			return new $wnd.OpenLayers.Control[name](o);
 		} else {
 			return null;
 		}

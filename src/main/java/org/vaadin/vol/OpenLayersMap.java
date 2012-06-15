@@ -19,6 +19,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
+import java.util.EnumMap;
 
 /**
  * Server side component for the VOpenLayersMap widget.
@@ -38,9 +39,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     private Bounds maxExtent;
     private Bounds maxExtentForZoom;
 
-    private HashSet<Control> controls = new HashSet<Control>(Arrays.asList(
-            Control.ArgParser, Control.Navigation, Control.TouchNavigation,
-            Control.Attribution));
+    private EnumMap<Control, String> controls = new EnumMap<Control,String>(Control.class);
 
     public OpenLayersMap() {
         this(false);
@@ -49,6 +48,10 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     public OpenLayersMap(boolean skipControls) {
         setWidth("500px");
         setHeight("350px");
+        addControl(Control.ArgParser);
+        addControl(Control.Navigation);
+        addControl(Control.TouchNavigation);
+        addControl(Control.Attribution);
         if (!skipControls) {
             addControl(Control.PanZoom);
             addControl(Control.LayerSwitcher);
@@ -56,7 +59,11 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     }
 
     public void addControl(Control control) {
-        controls.add(control);
+        addControl(control, "");
+    }
+
+    public void addControl(Control control, String options) {
+        controls.put(control, options);
         setDirty("controls");
     }
 
@@ -71,12 +78,12 @@ public class OpenLayersMap extends AbstractComponentContainer implements
      *         directly, call requestRepaint for the map to force repaint.
      */
     public Set<Control> getControls() {
-        return controls;
+        return controls.keySet();
     }
 
     /**
      * A typed alias for {@link #addComponent(Component)}.
-     * 
+     *
      * @param layer
      */
     public void addLayer(Layer layer) {
@@ -203,7 +210,8 @@ public class OpenLayersMap extends AbstractComponentContainer implements
             }
         }
         if (isDirty("controls")) {
-            target.addAttribute("controls", controls.toArray());
+            target.addAttribute("controls", getControls().toArray());
+            target.addAttribute("controlConfigs", controls.values().toArray());
         }
 
         paintActions(target, findAndPaintBodyActions(target));

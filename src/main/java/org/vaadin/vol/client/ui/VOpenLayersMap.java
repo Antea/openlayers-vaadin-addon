@@ -344,13 +344,14 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
                     myControls.keySet());
 
             String[] controls = uidl.getStringArrayAttribute("controls");
+            String[] controlConfigs = uidl.getStringArrayAttribute("controlConfigs");
             for (int i = 0; i < controls.length; i++) {
                 String name = controls[i];
+                String configs = controlConfigs[i];
                 if (oldcontrols.contains(name)) {
                     oldcontrols.remove(name);
                 } else {
-                    Control controlByName = Control.getControlByName(name,
-                            getMap());
+                    Control controlByName = Control.getControlByName(name, configs);
                     if (controlByName != null) {
                         map.addControl(controlByName);
                         myControls.put(name, controlByName);
