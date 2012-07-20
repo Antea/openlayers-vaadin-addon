@@ -516,7 +516,18 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
     @Override
     protected void onDetach() {
         super.onDetach();
-        getMap().removeLayer(getLayer());
+        if (added) {
+            if (df != null) {
+                getMap().removeControl(df);
+            }
+            if (selectFeature != null) {
+                getMap().removeControl(selectFeature);
+            }
+            if (hoverFeature != null) {
+                getMap().removeControl(hoverFeature);
+            }
+            getMap().removeLayer(getLayer());
+        }
     }
 
     protected Map getMap() {
