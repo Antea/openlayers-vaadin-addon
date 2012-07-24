@@ -90,6 +90,17 @@ public class OpenLayersMap extends AbstractComponentContainer implements
         addComponent(layer);
     }
 
+    public void removeAllLayers() {
+        for (Iterator<Component> it = layers.iterator(); it.hasNext();) {
+            Component component = it.next();
+            super.removeComponent(component);
+        }
+        if (!layers.isEmpty()) {
+            layers.clear();
+            setDirty("components");
+        }
+    }
+
     @Override
     public void removeComponent(Component c) {
         super.removeComponent(c);
