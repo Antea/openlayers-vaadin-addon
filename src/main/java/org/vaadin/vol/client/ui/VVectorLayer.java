@@ -238,7 +238,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                         // communicate points to server and mark the
                         // new geometry to be removed on next update.
                         client.sendPendingVariableChanges();
-                        if (drawingMode != "MODIFY") {
+                        if (drawingMode != "MODIFY" || drawingMode == "TRANSFORM") {
                             lastNewDrawing = feature;
                         }
                     }
@@ -319,6 +319,10 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         }
     }
 
+    /*
+     * NB: Si occupa anche di trasferire coerentemente la selezione corrente tra i controlli di
+     * edit/transform e quello di selezione/highlight durante i cambi di modalità
+     */
     private void setSelectionMode(UIDL layer) {
         String newSelectionMode = layer.getStringAttribute("smode").intern();
         if (currentSelectionMode != newSelectionMode) {
@@ -348,23 +352,33 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             }
         }
 
-        if (currentSelectionMode != "NONE" || drawingMode == "MODIFY") {
-            if (layer.hasAttribute("svector")) {
-                VAbstractVector selectedVector = (VAbstractVector) layer
-                        .getPaintableAttribute("svector", client);
-                if (selectedVector != null) {
-                    // ensure selection
+        if (layer.hasAttribute("svector")) {
+            Vector selectedVector = ((VAbstractVector) layer
+                    .getPaintableAttribute("svector", client)).getVector();
+            if (selectedVector != null) {
+                // ensure selection
+                if (drawingMode != "NONE") {
                     if (drawingMode == "MODIFY") {
                         ModifyFeature mf = (ModifyFeature) df.cast();
                         if(mf.getModifiedFeature() != null) {
                             mf.unselect(mf.getModifiedFeature());
                         }
-                        mf.select(selectedVector.getVector());
-                    } else {
-                        selectFeature.select(selectedVector.getVector());
+                        mf.select(selectedVector);
+                    } else if (drawingMode == "TRANSFORM") {
+                        TransformFeature tf = df.cast();
+                        if(tf.feature() != null) {
+                            tf.unsetFeature();
+                        }
+                        tf.setFeature(selectedVector);
+                    }
+                } else {
+                    if (currentSelectionMode != "NONE") {
+                        selectFeature.select(selectedVector);
                     }
                 }
-            } else {
+            }
+        } else {
+            if (drawingMode != "NONE") {
                 // remove selection
                 if (drawingMode == "MODIFY") {
                     ModifyFeature modifyFeature = (ModifyFeature) df.cast();
@@ -372,7 +386,14 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                         modifyFeature.unselect(modifyFeature
                                 .getModifiedFeature());
                     }
-                } else {
+                } else if (drawingMode == "TRANSFORM") {
+                    TransformFeature tf = df.cast();
+                    if (tf.feature() != null) {
+                        tf.unsetFeature();
+                    }
+                }
+            } else {
+                if (currentSelectionMode != "NONE") {
                     try {
                         selectFeature.unselectAll();
                     } catch (Exception e) {
@@ -392,6 +413,11 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                     ModifyFeature mf = df.cast();
                     if(mf.getModifiedFeature() != null) {
                         mf.unselect(mf.getModifiedFeature());
+                    }
+                } else if(drawingMode == "TRANSFORM") {
+                    TransformFeature tf = df.cast();
+                    if (tf.feature() != null) {
+                        tf.unsetFeature();
                     }
                 }
                 df.deActivate();

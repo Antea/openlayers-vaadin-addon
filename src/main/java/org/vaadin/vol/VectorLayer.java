@@ -148,6 +148,33 @@ public class VectorLayer extends AbstractComponentContainer implements Layer {
                 }
             }
         }
+        if (drawindMode == DrawingMode.TRANSFORM) {
+            Vector vector = (Vector) variables.get("transformedVector");
+            if (vector != null) {
+                vector.changeVariables(source, variables);
+                VectorTransformedEvent vectorTransformedEvent = new VectorTransformedEvent(this,
+                        vector);
+                if (variables.containsKey("scale")) {
+                    vectorTransformedEvent.setScale(Double.parseDouble(variables.get("scale").toString()));
+                }
+                if (variables.containsKey("ratio")) {
+                    vectorTransformedEvent.setRatio(Double.parseDouble(variables.get("ratio").toString()));
+                }
+                if (variables.containsKey("rotation")) {
+                    vectorTransformedEvent.setRotation(Double.parseDouble(variables.get("rotation").toString()));
+                }
+                // if rect/circle
+                Bounds bounds = new Bounds(Double.parseDouble(variables.get("bound_top").toString()),
+                        Double.parseDouble(variables.get("bound_left").toString()),
+                        Double.parseDouble(variables.get("bound_bottom").toString()),
+                        Double.parseDouble(variables.get("bound_right").toString()));
+                vectorTransformedEvent.setBounds(bounds);
+                fireEvent(vectorTransformedEvent);
+            } else {
+                Logger.getLogger(getClass().getName())
+                        .severe("Vector transformed event didn't provide related vector!?");
+            }
+        }
         if (drawindMode == DrawingMode.POINT && variables.containsKey("x")) {
             Double x = (Double) variables.get("x");
             Double y = (Double) variables.get("y");
