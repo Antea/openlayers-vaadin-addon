@@ -324,6 +324,17 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
      * edit/transform e quello di selezione/highlight durante i cambi di modalità
      */
     private void setSelectionMode(UIDL layer) {
+        // Vector unselect support
+        if (currentSelectionMode != "NONE") {
+            if (layer.hasAttribute("uvector")) {
+                VAbstractVector unselectedVector = (VAbstractVector) layer
+                        .getPaintableAttribute("uvector", client);
+                if (unselectedVector != null) {
+                    selectFeature.unselect(unselectedVector.getVector());
+                }
+            }
+        }
+
         String newSelectionMode = layer.getStringAttribute("smode").intern();
         if (currentSelectionMode != newSelectionMode) {
             if (selectFeature != null) {
@@ -341,16 +352,6 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             currentSelectionMode = newSelectionMode;
         }
 
-        // Vector unselect support
-        if (currentSelectionMode != "NONE") {
-            if (layer.hasAttribute("uvector")) {
-                VAbstractVector unselectedVector = (VAbstractVector) layer
-                        .getPaintableAttribute("uvector", client);
-                if (unselectedVector != null) {
-                    selectFeature.unselect(unselectedVector.getVector());
-                }
-            }
-        }
 
         if (layer.hasAttribute("svector")) {
             Vector selectedVector = ((VAbstractVector) layer
