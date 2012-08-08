@@ -259,7 +259,10 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
                     fakePaintables.add((Widget) paintable);
                 }
                 paintable.updateFromUIDL(layerUidl, client);
-
+            }
+            for (String id : orphanedcomponents) {
+                Widget remove = components.remove(id);
+                fakePaintables.remove(remove);
             }
         }
 
@@ -273,13 +276,6 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
         }
 
         updateZoomAndCenter(uidl);
-
-        if (uidl.getBooleanAttribute("componentsPainted")) {
-            for (String id : orphanedcomponents) {
-                Widget remove = components.remove(id);
-                fakePaintables.remove(remove);
-            }
-        }
 
         if (uidl.hasAttribute("alb")) {
             bodyActionKeys = uidl.getStringArrayAttribute("alb");
