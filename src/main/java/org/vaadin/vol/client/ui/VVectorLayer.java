@@ -25,6 +25,7 @@ import org.vaadin.vol.client.wrappers.handler.PolygonHandler;
 import org.vaadin.vol.client.wrappers.layer.VectorLayer;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -248,7 +249,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         return _fAddedListener;
     }
 
-    public void updateFromUIDL(UIDL layer, ApplicationConnection client) {
+    public void updateFromUIDL(final UIDL layer, ApplicationConnection client) {
         if (client.updateComponent(this, layer, false)) {
             return;
         }
@@ -270,9 +271,17 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         }
 
         updateStyleMap(layer);
-        setDrawingMode(layer.getStringAttribute("dmode"));
+
+        setDrawingMode(layer);
         setHightlightMode(layer);
         setSelectionMode(layer);
+
+        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                arrangeCurrentSelectedFeature(layer);
+            }
+        });
 
         HashSet<Widget> orphaned = new HashSet<Widget>();
         for (Iterator<Widget> iterator = iterator(); iterator.hasNext();) {
@@ -351,8 +360,9 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
             currentSelectionMode = newSelectionMode;
         }
+    }
 
-
+    private void arrangeCurrentSelectedFeature(final UIDL layer) {
         if (layer.hasAttribute("svector")) {
             Vector selectedVector = ((VAbstractVector) layer
                     .getPaintableAttribute("svector", client)).getVector();
@@ -405,8 +415,8 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         }
     }
 
-    private void setDrawingMode(String newDrawingMode) {
-        newDrawingMode = newDrawingMode.intern();
+    private void setDrawingMode(UIDL layer) {
+        String newDrawingMode = layer.getStringAttribute("dmode").intern();
         if (drawingMode != newDrawingMode) {
             if (drawingMode != "NONE") {
                 // remove old drawing feature
