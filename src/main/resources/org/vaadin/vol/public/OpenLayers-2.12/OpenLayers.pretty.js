@@ -39316,10 +39316,25 @@ OpenLayers.Control.TransformFeature = OpenLayers.Class(OpenLayers.Control, {
         }
         return deactivated;
     },
-    
+
+    /**
+     * Method: hideGhostUnderTheCarpet
+     * Nasconde la selection box senza disabilitare il controllo, in modo da
+     * poter continuare l'editing sul resto dei vettori.
+     */
+    hideGhostUnderTheCarpet: function() {
+        if(this.active) {
+            var originalIntent = this.renderIntent;
+            this.renderIntent = {display:'none'};
+            this.layer.drawFeature(this.box, this.renderIntent);
+            this.drawHandles();
+            this.renderIntent = originalIntent;
+        }
+    },
+
     /**
      * Method: setMap
-     * 
+     *
      * Parameters:
      * map - {<OpenLayers.Map>}
      */

@@ -23,6 +23,11 @@ public class TransformFeature extends AbstractEventedFeature {
                 this.unsetFeature();
         }-*/;
 
+        public final native void hideGhostUnderTheCarpet()
+        /*-{
+                this.hideGhostUnderTheCarpet();
+        }-*/;
+
         public final native void setFeature(Vector vector)
         /*-{
                 this.setFeature(vector);

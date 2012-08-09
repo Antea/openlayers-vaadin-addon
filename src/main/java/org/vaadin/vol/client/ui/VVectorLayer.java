@@ -402,6 +402,9 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                     if (tf.feature() != null) {
                         tf.unsetFeature();
                     }
+                    // HACK per nascondere il box di selezione visualizzato all'origine, ma
+                    // senza disabilitare il controllo, in modo da poter editare le altre aree
+                    tf.hideGhostUnderTheCarpet();
                 }
             } else {
                 if (currentSelectionMode != "NONE") {
