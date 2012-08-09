@@ -15,6 +15,7 @@ import org.vaadin.vol.client.wrappers.Projection;
 import org.vaadin.vol.client.wrappers.control.Control;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.user.client.Element;
@@ -138,7 +139,7 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
     /**
      * Called whenever an update is received from the server
      */
-    public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
+    public void updateFromUIDL(final UIDL uidl, final ApplicationConnection client) {
 
         // This call should be made first.
         // It handles sizes, captions, tooltips, etc. automatically.
@@ -275,7 +276,12 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
             map.setRestrictedExtent(bounds);
         }
 
-        updateZoomAndCenter(uidl);
+        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                updateZoomAndCenter(uidl);
+            }
+        });
 
         if (uidl.hasAttribute("alb")) {
             bodyActionKeys = uidl.getStringArrayAttribute("alb");
