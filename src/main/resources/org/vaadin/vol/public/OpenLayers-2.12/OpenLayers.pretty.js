@@ -39588,8 +39588,12 @@ OpenLayers.Control.TransformFeature = OpenLayers.Class(OpenLayers.Control, {
             handles[i] = handle;
         }
 
-        handle = new OpenLayers.Feature.Vector(this.center, {},
-            typeof this.renderIntent == "string" ? null : this.renderIntent);
+        geom = this.center;
+        handle = new OpenLayers.Feature.Vector(geom.clone(), {},
+                    typeof this.renderIntent == "string" ? null : this.renderIntent);
+        geom.move = vertexMoveFn;
+        handle.geometry.move = handleMoveFn;
+        geom._handle = handle;
         handles[8] = handle;
 
         this.rotationHandles = rotationHandles;
