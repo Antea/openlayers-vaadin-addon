@@ -39325,7 +39325,7 @@ OpenLayers.Control.TransformFeature = OpenLayers.Class(OpenLayers.Control, {
     hideGhostUnderTheCarpet: function() {
         if(this.active) {
             var originalIntent = this.renderIntent;
-            this.renderIntent = {display:'none'};
+            this.renderIntent = 'delete';
             this.layer.drawFeature(this.box, this.renderIntent);
             this.drawHandles();
             this.renderIntent = originalIntent;
