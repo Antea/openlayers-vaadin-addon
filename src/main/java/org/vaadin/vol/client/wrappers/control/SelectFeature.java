@@ -3,7 +3,7 @@ package org.vaadin.vol.client.wrappers.control;
 import org.vaadin.vol.client.wrappers.Vector;
 import org.vaadin.vol.client.wrappers.layer.Layer;
 
-public class SelectFeature extends Control {
+public class SelectFeature extends AbstractEventedFeature {
     protected SelectFeature() {
     }
 
