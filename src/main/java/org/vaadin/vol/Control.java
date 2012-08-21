@@ -5,9 +5,9 @@ public enum Control {
     /**
      * Supported from OpenLayers 2.11.
      */
-    TouchNavigation, Attribution, ZoomPanel,
+    TouchNavigation, Attribution, ZoomPanel, ZoomToMaxExtent, Zoom,
     /**
      * BBox custom
      */
-    LoadingPanel
+    LoadingPanel, ZoomToMaxExtentPanel
 }
