@@ -30,8 +30,7 @@ public class Point {
 	public static Point valueOf(String string) {
 		double lon;
 		double lat;
-		String substring = string.substring(6, string.length() - 1);
-		String[] split = substring.split(" ");
+		String[] split = string.split(",");
 		lon = Double.parseDouble(split[0]);
 		lat = Double.parseDouble(split[1]);
 		return new Point(lon, lat);

@@ -158,7 +158,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                                 point = point.nativeClone();
                                 point.transform(getMap().getProjection(),
                                         getProjection());
-                                points[i] = point.toString();
+                                points[i] = point.toShortString();
                             }
                             // VConsole.log("modified");
                             // communicate points to server and mark the
@@ -222,7 +222,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                                 Point point = allVertices.get(i);
                                 point.transform(getMap().getProjection(),
                                         getProjection());
-                                points[i] = point.toString();
+                                points[i] = point.toShortString();
                             }
                             client.updateVariable(paintableId, "vertices",
                                     points, false);
