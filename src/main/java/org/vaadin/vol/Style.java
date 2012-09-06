@@ -551,6 +551,9 @@ public class Style {
     public void setCursor(String cursor) {
         setProperty("cursor", cursor);
     }
+    public void setCursorByAttribute(String cursor) {
+        setPropertyByAttribute("cursor", cursor);
+    }
 
     /** Cursor. */
     public String getCursor() {
@@ -566,6 +569,9 @@ public class Style {
      */
     public void setGraphicName(String graphicName) {
         setProperty("graphicName", graphicName);
+    }
+    public void setGraphicNameByAttribute(String graphicName) {
+        setPropertyByAttribute("graphicName", graphicName);
     }
 
     /**

@@ -41,6 +41,11 @@ public class Point extends Geometry {
 		return getY();
 	}
 
+	public final native String toShortString()
+ 	/*-{
+		return this.toShortString();
+	}-*/;
+
 	/**
 	 * Creates a point from string representation where lon and lat are separated by ":".
 	 * @param string
