@@ -11,7 +11,7 @@ public class Bounds {
     private double right;
 
     public Bounds(Point... points) {
-        this(90, -180, -90, 180);
+        this(-90, 180, 90, -180);
         extend(points);
     }
 
