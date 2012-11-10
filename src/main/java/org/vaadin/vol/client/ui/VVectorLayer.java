@@ -275,13 +275,11 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         updateStyleMap(layer);
         setDrawingMode(layer);
 
-        setDrawingMode(layer);
-        setHightlightMode(layer);
-
         // Identifier for SelectFeature control to use ... layers specifying the
         // the same identifier can all listen for their own Select events on the map.
         selectionCtrlId = layer.getStringAttribute("selectionCtrlId");
 
+        setHightlightMode(layer);
         setSelectionMode(layer);
 
         Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
@@ -424,6 +422,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                 if (currentSelectionMode != "NONE") {
                     try {
                         selectFeature.unselectAll();
+                       
                     } catch (Exception e) {
                         // NOP, may throw exception if selected vector gets
                         // deleted
@@ -574,7 +573,18 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
 
     @Override
     protected void onDetach() {
-        getMap().removeLayer(getLayer());
+        if (added) {
+            if (df != null) {
+                getMap().removeControl(df);
+            }
+            if (selectFeature != null) {
+                getMap().removeControl(selectFeature);
+            }
+            if (hoverFeature != null) {
+                getMap().removeControl(hoverFeature);
+            }
+            getMap().removeLayer(getLayer());
+        }
         added = false;
         super.onDetach();
     }
