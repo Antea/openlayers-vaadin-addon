@@ -44,13 +44,15 @@ public class Bounds {
         double lon = p.getLon();
         if (lon < left) {
             left = lon;
-        } else if (lon > right) {
+        }
+        if (lon > right) {
             right = lon;
         }
         double lat = p.getLat();
         if (lat < bottom) {
             bottom = lat;
-        } else if (lat > top) {
+        }
+        if (lat > top) {
             top = lat;
         }
         // TODO figure out how to behave on poles and in date line
