@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.vaadin.vol</groupId>
     <artifactId>openlayers-wrapper</artifactId>
-    <version>0.9.5-ANTEA-04-SNAPSHOT</version>
+    <version>0.9.5-ANTEA-04</version>
     <packaging>jar</packaging>
     <name>openLayers vaadin wrapper</name>
 
