@@ -1,5 +1,6 @@
 package org.vaadin.vol.client.wrappers.control;
 
+import com.google.gwt.core.client.JsArray;
 import org.vaadin.vol.client.wrappers.Vector;
 import org.vaadin.vol.client.wrappers.layer.Layer;
 
@@ -64,5 +65,10 @@ public class SelectFeature extends AbstractEventedFeature {
     public final native void clickFeature(Vector vector)
     /*-{
         this.clickFeature(vector);
+    }-*/;
+
+    public final native void setLayer(JsArray<Layer> layers)
+    /*-{
+        this.setLayer(layers);
     }-*/;
 }

@@ -24,6 +24,12 @@ public abstract class AbstractAutoPopulatedVectorLayer extends
     private String projection;
     private String displayName = "WFS";
 	private SelectionMode selectionMode;
+	
+	/**
+	 * this will be used to group vector layers to share the same SelectFeature
+	 * control 
+	 */
+	private String selectionCtrlId;
 
     public AbstractAutoPopulatedVectorLayer() {
         super();
@@ -36,15 +42,26 @@ public abstract class AbstractAutoPopulatedVectorLayer extends
         String fid = (String) variables.get("fid");
         Map<String,Object> attr = (Map<String, Object>) variables.get("attr");
         String wkt = (String) variables.get("wkt");
-        featureSelected(fid, attr, wkt);
-        
-        // TODO create unselected event
+        String sSel=(String)variables.get(FeatureSelectedListener.EVENT_ID);
+        String sUnsel=(String)variables.get(FeatureUnSelectedListener.EVENT_ID);
+        String sBefsel=(String)variables.get(BeforeFeatureSelectedListener.EVENT_ID);
+        if (sSel!=null) {
+        	FeatureSelectedEvent featureSelectedEvent = 
+        			new FeatureSelectedEvent(this, fid, attr, wkt);
+        	fireEvent(featureSelectedEvent);
+        }
+        else if (sUnsel!=null) {
+        	FeatureUnSelectedEvent featureUnSelectedEvent = 
+        			new FeatureUnSelectedEvent(this, fid, attr, wkt);
+        	fireEvent(featureUnSelectedEvent);        	
+        }
+        else if (sBefsel!=null) {
+        	BeforeFeatureSelectedEvent beforeFeatureSelectedEvent = 
+        			new BeforeFeatureSelectedEvent(this, fid, attr, wkt);
+        	fireEvent(beforeFeatureSelectedEvent);        	
+        }
     }
 
-    private void featureSelected(String fid, Map<String, Object> attr, String wkt) {
-    	FeatureSelectedEvent featureSelectedEvent = new FeatureSelectedEvent(this, fid, attr, wkt);
-    	fireEvent(featureSelectedEvent);
-    }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -52,6 +69,9 @@ public abstract class AbstractAutoPopulatedVectorLayer extends
         target.addAttribute("display", displayName);
         if (projection != null) {
             target.addAttribute("projection", projection);
+        }
+        if (selectionCtrlId!=null) {
+        	target.addAttribute("selectionCtrlId",selectionCtrlId);
         }
         if (stylemap != null) {
             stylemap.paint(target);
@@ -99,6 +119,14 @@ public abstract class AbstractAutoPopulatedVectorLayer extends
         return selectionMode;
     }
     
+    public void setSelectionCtrlId(String selectionCtrlId) {
+    	this.selectionCtrlId = selectionCtrlId;
+    }
+    
+    public String getSelectionCtrlId() {
+    	return selectionCtrlId;
+    }
+    
     public interface FeatureSelectedListener {
 
         public final String EVENT_ID = "vsel";
@@ -121,6 +149,16 @@ public abstract class AbstractAutoPopulatedVectorLayer extends
                 FeatureSelectedEvent.class, listener);
     }
 
+    public void addListener(BeforeFeatureSelectedListener listener) {
+        addListener(BeforeFeatureSelectedListener.EVENT_ID, BeforeFeatureSelectedEvent.class,
+                listener, BeforeFeatureSelectedListener.method);
+    }
+
+    public void removeListener(BeforeFeatureSelectedListener listener) {
+        removeListener(BeforeFeatureSelectedListener.EVENT_ID,
+                BeforeFeatureSelectedEvent.class, listener);
+    }
+    
     public class FeatureSelectedEvent extends Event {
 
         private String featureId;
@@ -172,6 +210,18 @@ public abstract class AbstractAutoPopulatedVectorLayer extends
 
     }
 
+    public interface BeforeFeatureSelectedListener {
+
+        public final String EVENT_ID = "vbefsel";
+
+        public final Method method = ReflectTools.findMethod(
+                BeforeFeatureSelectedListener.class, "beforeFeatureSelected",
+                BeforeFeatureSelectedEvent.class);
+
+        public boolean beforeFeatureSelected(BeforeFeatureSelectedEvent event);
+
+    }
+    
     public void addListener(FeatureUnSelectedListener listener) {
         addListener(FeatureUnSelectedListener.EVENT_ID,
                 FeatureUnSelectedEvent.class, listener,
@@ -191,5 +241,12 @@ public abstract class AbstractAutoPopulatedVectorLayer extends
 
     }
 
+    public class BeforeFeatureSelectedEvent extends FeatureSelectedEvent {
+
+		public BeforeFeatureSelectedEvent(Component source, String featureId,Map<String, Object> attr, String wkt) {
+			super(source, featureId, attr, wkt);
+		}
+
+    }
 
 }
