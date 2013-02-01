@@ -1,27 +1,48 @@
 package org.vaadin.vol.demo;
 
-import org.vaadin.vol.AbstractAutoPopulatedVectorLayer.BeforeFeatureSelectedEvent;
-import org.vaadin.vol.AbstractAutoPopulatedVectorLayer.BeforeFeatureSelectedListener;
-import org.vaadin.vol.LabelVector;
+
+import org.vaadin.vol.AbstractLayerBase.LoadEndEvent;
+import org.vaadin.vol.AbstractLayerBase.LoadEndListener;
+import org.vaadin.vol.AbstractLayerBase.LoadStartEvent;
+import org.vaadin.vol.AbstractLayerBase.LoadStartListener;
+import org.vaadin.vol.AbstractLayerBase.VisibilityChangedEvent;
+import org.vaadin.vol.AbstractLayerBase.VisibilityChangedListener;
 import org.vaadin.vol.OpenLayersMap;
 import org.vaadin.vol.OpenStreetMapLayer;
-import org.vaadin.vol.Point;
 import org.vaadin.vol.Style;
 import org.vaadin.vol.StyleMap;
-import org.vaadin.vol.VectorLayer;
 import org.vaadin.vol.WebFeatureServiceLayer;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Loads different feature types from a wfs use beforefeature select event
  * to show messages.
+ * TODO - only the last added Listener catch the mouse clicks, seems to be a bug
+ * in mouse click handling
  */
-public class WebFeatureServiceLayerTest2 extends AbstractVOLTest {
-
+public class EventsOSMandWFSLayer extends AbstractVOLTest {
+	private LoadStartListener loadStartListener=new LoadStartListenerImpl();
+	private LoadEndListener loadEndListener=new LoadEndListenerImpl();
+	private VisibilityChangedListener visChangedListener=new VisChangedListenerImpl();
+	
+	int start=0,end=0;
+	
+	private HorizontalLayout controls;
+	private com.vaadin.ui.TextArea editor;
+	
+    @Override
+    protected void setup() {
+        super.setup();
+        ((VerticalLayout) getContent()).addComponentAsFirst(controls);
+    }
+	
+	
     @Override
     public String getDescription() {    	
-        return "Just another WFS example. Shows reclickable feature, and btw you can click on all layers :-D";
+        return "Demonstrates the use of basic layer events";
     }
 
     private WebFeatureServiceLayer createWfsLayer(String displayName,
@@ -33,6 +54,9 @@ public class WebFeatureServiceLayerTest2 extends AbstractVOLTest {
         wfsLayer.setFeatureNS("http://www.openplans.org/topp");
         wfsLayer.setProjection("EPSG:4326");
         wfsLayer.setSelectionCtrlId("1");
+        wfsLayer.addListener(loadStartListener);
+        wfsLayer.addListener(loadEndListener);
+        wfsLayer.addListener(visChangedListener);
         return wfsLayer;
     }
 
@@ -53,9 +77,13 @@ public class WebFeatureServiceLayerTest2 extends AbstractVOLTest {
     }
 
     @Override
-    Component getMap() {
+    Component getMap() {    	
         OpenLayersMap openLayersMap = new OpenLayersMap();
         OpenStreetMapLayer osmLayer = new OpenStreetMapLayer();
+
+        osmLayer.addListener(loadStartListener);
+        osmLayer.addListener(loadEndListener);
+        
         osmLayer.setUrl("http://b.tile.openstreetmap.org/${z}/${x}/${y}.png");
         osmLayer.setDisplayName("OSM");
 
@@ -65,64 +93,59 @@ public class WebFeatureServiceLayerTest2 extends AbstractVOLTest {
         WebFeatureServiceLayer wfsCities = createWfsLayer("Cities", proxyUrl,
                 "tasmania_cities");
         setStyle(wfsCities, 1, "yellow", "red", 4, 2);
-        wfsCities.addListener(new BeforeFeatureSelectedListener() {
-            public boolean beforeFeatureSelected(BeforeFeatureSelectedEvent event) {
-                showNotification("I'm a city");
-                return false;
-            }
-        });
-        final WebFeatureServiceLayer wfsRoads = createWfsLayer("Roads", proxyUrl,
+
+        WebFeatureServiceLayer wfsRoads = createWfsLayer("Roads", proxyUrl,
                 "tasmania_roads");
         setStyle(wfsRoads, 1, "gray", "gray", 0, 4);
         // don't use beforeselected and selected listener at the same time to show massages
-        wfsRoads.addListener(new BeforeFeatureSelectedListener() {
-            public boolean beforeFeatureSelected(BeforeFeatureSelectedEvent event) {
-                Object typeName = event.getAttributes().get("TYPE");
-                showNotification("Before feature Selected: Road type: " + typeName);
-                return false;
-            }
-        });
         WebFeatureServiceLayer wfsBoundaries = createWfsLayer("Boundaries",
                 proxyUrl, "tasmania_state_boundaries");
-        wfsBoundaries.addListener(new BeforeFeatureSelectedListener() {
-            public boolean beforeFeatureSelected(BeforeFeatureSelectedEvent event) {
-                showNotification("No idea what I am :'-(");
-                return false;
-            }
-        });
         wfsBoundaries.setVisibility(false);
         WebFeatureServiceLayer wfsWater = createWfsLayer("Water", proxyUrl,
                 "tasmania_water_bodies");
         setStyle(wfsWater, 0.5, "blue", "blue", 1, 2);
-        wfsWater.addListener(new BeforeFeatureSelectedListener() {
-            public boolean beforeFeatureSelected(BeforeFeatureSelectedEvent event) {
-                showNotification("I am water :-D");
-                return false;
-            }
-        });
-        
         openLayersMap.addLayer(osmLayer);
         openLayersMap.addLayer(wfsCities);
         openLayersMap.addLayer(wfsRoads);
         openLayersMap.addLayer(wfsWater);
-        openLayersMap.addLayer(wfsBoundaries);
-        
-        // add a comment
-        VectorLayer vectorLayer = new VectorLayer();
-        vectorLayer.setDisplayName("Comments");
-        LabelVector labelVector = new LabelVector("don't click on this cities \n (vopenlayers issue 99)");
-        labelVector.getCustomStyle().setFontColor("red");
-        labelVector.setPoints(new Point(147, -44.5429));
-        vectorLayer.addVector(labelVector);
-        openLayersMap.addLayer(vectorLayer);
-        
-        
+        openLayersMap.addLayer(wfsBoundaries);               
         openLayersMap.setSizeFull();
 
         openLayersMap.setCenter(146.9417, -42.0429);
         openLayersMap.setZoom(7);
+        
+        controls = new HorizontalLayout();
 
+        editor = new com.vaadin.ui.TextArea();
+        editor.setRows(20);
+        editor.setColumns(20);
+        editor.setImmediate(true);
+        addComponent(editor);        
+        controls.addComponent(editor);
+                
         return openLayersMap;
     }
+    
+    private String getLogTxt(String msg,String value) {
+		String newTxt="start="+start+", end="+end;
+    	return newTxt;
+    }
 
+    class LoadStartListenerImpl implements LoadStartListener {
+    	public void loadStart(LoadStartEvent event) {
+    		start++;
+    		editor.setValue(getLogTxt("loadStart",(String)editor.getValue()));
+    	};
+    }
+    class LoadEndListenerImpl implements LoadEndListener {
+    	public void loadEnd(LoadEndEvent event) {
+    		end++;
+    		editor.setValue(getLogTxt("loadEnd",(String)editor.getValue()));
+    	};
+    }
+    class VisChangedListenerImpl implements VisibilityChangedListener {
+    	public void visibilityChanged(VisibilityChangedEvent event) {
+    		editor.setValue(getLogTxt("visChanged vis="+event.isVisible(),(String)editor.getValue()));
+    	}
+    }
 }

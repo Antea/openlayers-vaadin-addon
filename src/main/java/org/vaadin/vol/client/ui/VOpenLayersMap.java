@@ -16,6 +16,7 @@ import org.vaadin.vol.client.wrappers.control.Control;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.user.client.Element;
@@ -33,6 +34,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.Action;
 import com.vaadin.terminal.gwt.client.ui.ActionOwner;
 import com.vaadin.terminal.gwt.client.ui.TreeAction;
+import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 
 /**
  * Client side widget which communicates with the server. Messages from the
@@ -236,7 +238,6 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
         paintableId = uidl.getId();
 
         updateControls(uidl);
-
         if (uidl.hasAttribute("me_top")) {
             Bounds bounds = Bounds.create(uidl.getDoubleAttribute("me_left"),
                     uidl.getDoubleAttribute("me_bottom"),
@@ -262,6 +263,7 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
                     fakePaintables.add((Widget) paintable);
                 }
                 paintable.updateFromUIDL(layerUidl, client);
+
             }
             for (String id : orphanedcomponents) {
                 Widget remove = components.remove(id);
@@ -284,6 +286,13 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
                 updateZoomAndCenter(uidl);
             }
         });
+
+        if (uidl.getBooleanAttribute("componentsPainted")) {
+            for (String id : orphanedcomponents) {
+                Widget remove = components.remove(id);
+                fakePaintables.remove(remove);
+            }
+        }
 
         if (uidl.hasAttribute("alb")) {
             bodyActionKeys = uidl.getStringArrayAttribute("alb");
@@ -377,6 +386,7 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
     }
 
     private void updateZoomAndCenter(UIDL uidl) {
+
         // Skip for empty map
         if (getMap().getProjection() != null) {
 
@@ -461,5 +471,23 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
     public void attachSpecialWidget(Widget paintable,
             com.google.gwt.dom.client.Element elementById) {
         add(paintable, (Element) elementById.cast());
+    }
+    
+    VLazyExecutor resizeMap = new VLazyExecutor(300, new ScheduledCommand() {
+        public void execute() {
+            map.updateSize();
+        }
+    });
+    
+    @Override
+    public void setWidth(String width) {
+        super.setWidth(width);
+        resizeMap.trigger();
+    }
+    
+    @Override
+    public void setHeight(String height) {
+        super.setHeight(height);
+        resizeMap.trigger();
     }
 }

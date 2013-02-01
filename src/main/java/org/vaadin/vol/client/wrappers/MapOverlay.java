@@ -35,10 +35,18 @@ public class MapOverlay extends AbstractOpenLayersWrapper {
     	        }
     	    } catch(e){};
     	}
+    	eval("var OpenLayers = window.top.OpenLayers");
 
-    	var options = optionsJs ? eval("options = " +optionsJs+ ";") : {};
-        $wnd.OpenLayers.Util.applyDefaults(options, {controls: initialControls});
-
+    	if(optionsJs) {
+       	    eval("window.top.VOLoptions = " +optionsJs+ ";");
+    	} else {
+            eval("window.top.VOLoptions = {}");
+    	}
+    	var options = $wnd.VOLoptions;
+    	if(!options.controls) {
+            options["controls"] = initialControls;
+    	}
+    	
     	return new $wnd.OpenLayers.Map(id, options);
     }-*/;
 
@@ -130,6 +138,11 @@ public class MapOverlay extends AbstractOpenLayersWrapper {
     public final native LonLat getLonLatFromPixel(Pixel pixel)
     /*-{
         return this.getLonLatFromPixel(pixel);
+    }-*/;
+
+    public final native void updateSize()
+    /*-{
+        this.updateSize();
     }-*/;
 
     public final native void setMaxExtent(Bounds bounds)

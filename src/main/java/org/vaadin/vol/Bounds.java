@@ -1,9 +1,10 @@
 package org.vaadin.vol;
 
+import java.io.Serializable;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
-public class Bounds {
+public class Bounds implements Serializable {
 
     private double top;
     private double bottom;
@@ -11,29 +12,35 @@ public class Bounds {
     private double right;
 
     public Bounds(Point... points) {
-        this(-90, 180, 90, -180);
-        extend(points);
+        init();
+        for (int i = 0; i < points.length; i++) {
+            Point p = points[i];
+            extend(p);
+        }
+        if(points.length == 1) {
+            extend(points[0]);
+        }
     }
 
     /**
      * Init value are first point check and speed up bounds computing with huge
      * arrays
      */
-    public Bounds(final double top, final double left, final double bottom, final double right) {
-        this.bottom = bottom;
-        this.top = top;
-        this.right = right;
-        this.left = left;
+    private void init() {
+        bottom = +90.00;
+        top = -90.00;
+        right = -180.00;
+        left = +180.00;
     }
 
     /**
      * extend(Point... points) will be useful in case of multiple vector on the
      * same map to compute the bounds that surround all the vectors
-     *
+     * 
      * Notes : there is no check of the starting bounds values the method will
      * fail if bounds values are not correctly initialized
      */
-    public final void extend(Point... points) {
+    public void extend(Point... points) {
         for (int i = 0; i < points.length; i++) {
             Point p = points[i];
             extend(p);
