@@ -11,6 +11,13 @@ public class Bounds implements Serializable {
     private double left;
     private double right;
 
+    public Bounds(double left, double top, double right, double bottom) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+    }
+
     public Bounds(Point... points) {
         init();
         for (int i = 0; i < points.length; i++) {

@@ -38,8 +38,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     private boolean partialRepaint;
     private Bounds maxExtent;
     private Bounds maxExtentForZoom;
-
-    private EnumMap<Control, String> controls = new EnumMap<Control,String>(Control.class);
+    private EnumMap<Control, String> controls = new EnumMap<Control, String>(Control.class);
 
     public OpenLayersMap() {
         this(false);
@@ -151,14 +150,12 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     public int getZoom() {
         return zoom;
     }
-
     private HashSet<String> dirtyFields = new HashSet<String>();
     private boolean fullRepaint = true;
     private double top;
     private double right;
     private double bottom;
     private double left;
-
     private String jsMapOptions;
     private Bounds zoomToExtent;
     private Bounds restrictedExtend;
@@ -296,7 +293,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
      * @return
      */
     public Bounds getExtend() {
-        return new Bounds(new Point(left, top), new Point(right, bottom));
+        return new Bounds(left, top, right, bottom);
     }
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
@@ -537,7 +534,6 @@ public class OpenLayersMap extends AbstractComponentContainer implements
                 MapClickListener.class, "mapClicked", MapClickEvent.class);
 
         public void mapClicked(MapClickEvent event);
-
     }
 
     public void addListener(MapClickListener listener) {
@@ -570,6 +566,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     }
 
     public class ExtentChangeEvent extends Event {
+
         public ExtentChangeEvent() {
             super(OpenLayersMap.this);
         }
@@ -587,7 +584,6 @@ public class OpenLayersMap extends AbstractComponentContainer implements
                 ExtentChangeEvent.class);
 
         public void extentChanged(ExtentChangeEvent event);
-
     }
 
     public void addListener(ExtentChangeListener listener) {

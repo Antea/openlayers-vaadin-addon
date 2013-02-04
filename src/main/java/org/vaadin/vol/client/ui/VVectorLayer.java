@@ -466,9 +466,9 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             } else if (drawingMode == "POINT") {
                 df = createDrawFeature(getLayer(), drawingMode);
             } else if (drawingMode == "RECTANGLE") {
-                df = createTransformFeature(getLayer());
+                df = createDrawFeature(getLayer(), drawingMode);
             } else if (drawingMode == "CIRCLE") {
-                df = createTransformFeature(getLayer());
+                df = createDrawFeature(getLayer(), drawingMode);
             }
             if (df != null) {
                 getMap().addControl(df);
