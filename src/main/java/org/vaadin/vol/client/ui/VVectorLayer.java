@@ -352,22 +352,23 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         String newSelectionMode = layer.getStringAttribute("smode").intern();
         if (currentSelectionMode != newSelectionMode) {
             if (selectFeature != null) {
-                selectFeature.deActivate();
-                /* remove this layer from the SelectFeature instead of removing the control
-                getMap().removeControl(selectFeature);
-                */
+                // Versione ONE SELECT
+//                selectFeature.deActivate();
+//                getMap().removeControl(selectFeature);
+
+                // Versione MULTI SELECT
                 SelectFeatureFactory.getInst().removeLayer(selectFeature, selectionCtrlId, getMap(), vectors);
                 selectFeature = null;
             }
 
             if (newSelectionMode != "NONE") {
-                /* delegate responsibility for managing the SelectFeature to the factory;
-                 * just let it know we want to register this vectorlayer in the SelectFeature.
-                selectFeature = SelectFeature.create(vectors);
-                getMap().addControl(selectFeature);
-                */
+                // VERSIONE ONE SELECT
+//                selectFeature = SelectFeature.create(vectors);
+//                getMap().addControl(selectFeature);
+//                selectFeature.activate();
+
+                // VERSIONE MULTI SELECT
                 selectFeature = SelectFeatureFactory.getInst().getOrCreate(selectionCtrlId, getMap(), vectors);
-                selectFeature.activate();
             }
 
             currentSelectionMode = newSelectionMode;
