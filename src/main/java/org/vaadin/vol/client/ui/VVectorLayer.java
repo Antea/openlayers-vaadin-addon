@@ -195,7 +195,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
     private boolean added = false;
     private String currentSelectionMode;
     private SelectFeature selectFeature;
-    private String selectionCtrlId;             // Common SelectFeature control identifier
+    protected String selectionCtrlId;             // Common SelectFeature control identifier
 
     private GwtOlHandler getFeatureAddedListener() {
         if (_fAddedListener == null) {
@@ -595,6 +595,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         super.onAttach();
         if (!added && vectors != null) {
             getMap().addLayer(getLayer());
+            added = true;
         }
     }
 
