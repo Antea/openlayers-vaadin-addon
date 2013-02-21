@@ -14,7 +14,7 @@ import java.util.HashSet;
  * @author eiko
  *
  */
-public class SelectFeatureFactory {
+public final class SelectFeatureFactory {
 
     private static SelectFeatureFactory inst = null;
     private java.util.Map<String, SelectFeatureContainer> selectFeatureControls =
