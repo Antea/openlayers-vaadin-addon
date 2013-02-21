@@ -643,10 +643,6 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
         }
     }
 
-    protected SelectFeature createSelectFeature(VectorLayer layer, String selectMode) {
-        return SelectFeature.create(layer);
-    }
-
     protected DrawFeature createDrawFeature(VectorLayer layer, String mode) {
         if (mode == "AREA") {
             return DrawFeature.create(layer, PolygonHandler.get());
