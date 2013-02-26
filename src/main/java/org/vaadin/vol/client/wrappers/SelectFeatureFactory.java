@@ -109,8 +109,8 @@ public final class SelectFeatureFactory {
 				control.setLayer(layerArray);				
 			}
 			if (layerVector.size()==0) {
-				this.control=null;
 	            control.deActivate();
+				this.control=null;
 	            map.removeControl(control);
 			}
 		}
