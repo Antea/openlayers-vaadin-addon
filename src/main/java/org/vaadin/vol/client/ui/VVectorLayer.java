@@ -366,8 +366,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                 selectFeature = SelectFeature.create(vectors);
                 getMap().addControl(selectFeature);
                 */
-                selectFeature = SelectFeatureFactory.getInst().getOrCreate(selectionCtrlId, getMap(), vectors);
-                selectFeature.activate();
+                createSelectFeature(vectors, newSelectionMode);
             }
 
             currentSelectionMode = newSelectionMode;
@@ -653,7 +652,9 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
     }
 
     protected SelectFeature createSelectFeature(VectorLayer layer, String selectMode) {
-        return SelectFeature.create(layer);
+        selectFeature = SelectFeatureFactory.getInst().getOrCreate(selectionCtrlId, getMap(), layer);
+        selectFeature.activate();
+        return selectFeature;
     }
 
     protected DrawFeature createDrawFeature(VectorLayer layer, String mode) {
