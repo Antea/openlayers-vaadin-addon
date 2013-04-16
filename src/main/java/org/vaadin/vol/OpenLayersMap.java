@@ -15,6 +15,7 @@ import java.util.*;
 /**
  * Server side component for the VOpenLayersMap widget.
  */
+
 @SuppressWarnings("serial")
 @com.vaadin.ui.ClientWidget(org.vaadin.vol.client.ui.VOpenLayersMap.class)
 public class OpenLayersMap extends AbstractComponentContainer implements
@@ -29,6 +30,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     private boolean partialRepaint;
     private Bounds maxExtent;
     private Bounds maxExtentForZoom;
+    private Layer baseLayer;
     private EnumMap<Control, String> controls = new EnumMap<Control, String>(Control.class);
 
     public OpenLayersMap() {
@@ -117,7 +119,36 @@ public class OpenLayersMap extends AbstractComponentContainer implements
         layers.add(c);
     }
 
-    public void setCenter(double lon, double lat) {
+    
+    /**
+     * Change the base layer of the map.
+     * <p>
+     * Note that once the change has been made client-side, a BaseLayerChangeEvent will be fired server-side, and the name of
+     * the new base layer will be available from getBaseLayerName().
+     * @param newBaseLayer      the layer that will be the new base layer
+     * @throws IllegalArgumentException If the layer is not already associated with the map and/or the layer is not a base layer.                  
+     */
+    public void setBaseLayer(Layer newBaseLayer) {
+        // Need to add a check to make sure the newBaseLayer is in fact a base layer....API needs more work for that
+        if (newBaseLayer != null && layers.contains(newBaseLayer)) {
+            //System.out.println("...not eq, setting");
+            baseLayer = newBaseLayer;
+            setDirty("baseLayer");
+       } else {
+            throw new IllegalArgumentException("Only existing map layers can become the base layer");               
+       }
+    }
+    
+    /**
+     * Get the name (display name) of the current base layer
+     * 
+     * @return Current base layer name.  
+     */
+    public Layer getBaseLayer() {
+        return baseLayer;
+    }
+    
+    public void setCenter(double lon, double lat) {  
         centerLat = lat;
         centerLon = lon;
         setDirty("clat");
@@ -191,6 +222,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
+        
         if (isDirty("projection") && projection != null) {
             target.addAttribute("projection", projection);
         }
@@ -229,6 +261,10 @@ public class OpenLayersMap extends AbstractComponentContainer implements
             target.addAttribute("controls", getControls().toArray());
             target.addAttribute("controlConfigs", controls.values().toArray());
         }
+        
+        if (isDirty("baseLayer") && baseLayer != null) {
+            target.addAttribute("baseLayer", baseLayer);
+        }
 
         paintActions(target, findAndPaintBodyActions(target));
 
@@ -249,6 +285,11 @@ public class OpenLayersMap extends AbstractComponentContainer implements
             fireEvent(new ExtentChangeEvent());
         }
 
+        if (variables.containsKey("baseLayer")) {
+        	
+            updateBaseLayer((Layer) variables.get("baseLayer"));
+        }
+        
         // Actions
         if (variables.containsKey("action")) {
             String string = (String) variables.get("action");
@@ -287,6 +328,11 @@ public class OpenLayersMap extends AbstractComponentContainer implements
         }
     }
 
+    protected void updateBaseLayer(Layer baseLayer) {
+        this.baseLayer = baseLayer;
+        fireEvent(new BaseLayerChangeEvent());
+    }
+    
     protected void updateExtent(Map<String, Object> variables) {
         this.zoom = (Integer) variables.get("zoom");
         top = (Double) variables.get("top");
@@ -612,4 +658,34 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     public void zoomToMaxExtent() {
         zoomToExtent(maxExtentForZoom);
     }
+
+    public class BaseLayerChangeEvent extends Event {
+        public BaseLayerChangeEvent() {
+            super(OpenLayersMap.this);
+        }
+
+        @Override
+        public OpenLayersMap getComponent() {
+            return (OpenLayersMap) super.getComponent();
+        }
+    }
+
+    public interface BaseLayerChangeListener {
+
+        public static final Method method = ReflectTools.findMethod(
+                BaseLayerChangeListener.class, "baseLayerChanged",
+                BaseLayerChangeEvent.class);
+
+        public void baseLayerChanged(BaseLayerChangeEvent event);
+    }
+
+    public void addListener(BaseLayerChangeListener listener) {
+        addListener(BaseLayerChangeEvent.class, listener,
+                BaseLayerChangeListener.method);
+    }
+
+    public void removeListener(BaseLayerChangeListener listener) {
+        removeListener(BaseLayerChangeEvent.class, listener);
+    }
+
 }
