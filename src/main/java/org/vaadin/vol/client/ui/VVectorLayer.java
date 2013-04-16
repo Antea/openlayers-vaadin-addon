@@ -28,6 +28,10 @@ import org.vaadin.vol.client.wrappers.layer.VectorLayer;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
+<<<<<<< HEAD
+=======
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+>>>>>>> c022114... merged fix for issue 126 to trunk
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -35,6 +39,7 @@ import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import org.vaadin.vol.client.wrappers.control.HighlightFeature;
 import org.vaadin.vol.client.wrappers.control.TransformFeature;
@@ -338,7 +343,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
      * NB: Si occupa anche di trasferire coerentemente la selezione corrente tra i controlli di
      * edit/transform e quello di selezione/highlight durante i cambi di modalità
      */
-    private void setSelectionMode(UIDL layer) {
+    private void setSelectionMode(final UIDL layer) {
         // Vector unselect support
         if (currentSelectionMode != "NONE") {
             if (layer.hasAttribute("uvector")) {
@@ -374,31 +379,37 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
     }
 
     private void arrangeCurrentSelectedFeature(final UIDL layer) {
-            if (layer.hasAttribute("svector")) {
-            Vector selectedVector = ((VAbstractVector) layer
-                    .getPaintableAttribute("svector", client)).getVector();
-                if (selectedVector != null) {
-                    // ensure selection
-                if (drawingMode != "NONE") {
-                    if (drawingMode == "MODIFY") {
-                        ModifyFeature mf = (ModifyFeature) df.cast();
-                        if(mf.getModifiedFeature() != null) {
-                            mf.unselect(mf.getModifiedFeature());
+        if (layer.hasAttribute("svector")) {
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                public void execute() {
+                    Vector selectedVector = ((VAbstractVector) layer
+                            .getPaintableAttribute("svector", client)).getVector();
+                    if (selectedVector != null) {
+                        updating = true;
+                        // ensure selection
+                        if (drawingMode != "NONE") {
+                            if (drawingMode == "MODIFY") {
+                                ModifyFeature mf = (ModifyFeature) df.cast();
+                                if (mf.getModifiedFeature() != null) {
+                                    mf.unselect(mf.getModifiedFeature());
+                                }
+                                mf.select(selectedVector);
+                            } else if (drawingMode == "TRANSFORM") {
+                                TransformFeature tf = df.cast();
+                                if (tf.feature() != null) {
+                                    tf.unsetFeature();
+                                }
+                                tf.setFeature(selectedVector);
+                            }
+                        } else {
+                            if (currentSelectionMode != "NONE") {
+                                selectFeature.select(selectedVector);
+                            }
+                            updating = false;
                         }
-                        mf.select(selectedVector);
-                    } else if (drawingMode == "TRANSFORM") {
-                        TransformFeature tf = df.cast();
-                        if(tf.feature() != null) {
-                            tf.unsetFeature();
-                        }
-                        tf.setFeature(selectedVector);
-                    }
-                    } else {
-                    if (currentSelectionMode != "NONE") {
-                        selectFeature.select(selectedVector);
                     }
                     }
-                }
+            });
             } else {
             if (drawingMode != "NONE") {
                 // remove selection
