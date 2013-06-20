@@ -290,7 +290,9 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
         if (uidl.getBooleanAttribute("componentsPainted")) {
             for (String id : orphanedcomponents) {
                 Widget remove = components.remove(id);
-                fakePaintables.remove(remove);
+                if (null != remove) {
+                    fakePaintables.remove(remove);
+                }
             }
         }
 
