@@ -28,10 +28,7 @@ import org.vaadin.vol.client.wrappers.layer.VectorLayer;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
-<<<<<<< HEAD
-=======
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
->>>>>>> c022114... merged fix for issue 126 to trunk
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
