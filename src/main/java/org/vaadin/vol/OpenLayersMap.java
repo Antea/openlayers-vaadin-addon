@@ -1,5 +1,17 @@
 package org.vaadin.vol;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import com.vaadin.event.Action;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
@@ -8,9 +20,6 @@ import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
 import java.util.EnumMap;
-
-import java.lang.reflect.Method;
-import java.util.*;
 
 /**
  * Server side component for the VOpenLayersMap widget.
@@ -105,10 +114,10 @@ public class OpenLayersMap extends AbstractComponentContainer implements
      * certain types of Components.
      * <p>
      * Developers are encouraged to use better typed methods instead:
-     *
+     * 
      * @see #addLayer(Layer)
      * @see #addPopup(Popup)
-     *
+     * 
      * @see com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.Component)
      */
     @Override
@@ -156,7 +165,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
 
     /**
      * Set the center of map to the center of a bounds
-     *
+     * 
      */
     public void setCenter(Bounds bounds) {
         centerLat = (bounds.getBottom() + bounds.getTop()) / 2.0;
@@ -183,31 +192,14 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     private Bounds restrictedExtend;
     private String projection;
 
-    /**
-     * Sets one or more fields as 'dirty' in order to do a partial repaint of just those fields
-     * @param fieldNames String var-args array of field names to mark as 'dirty'
-     */
-    protected void setDirty(String... fieldNames) {
-        if (!fullRepaint && fieldNames != null && fieldNames.length > 0) {
-            boolean needsParitialPaint = false;
-            for (String fieldName : fieldNames) {
-                if (fieldName != null) {
-                    dirtyFields.add(fieldName);
-                    needsParitialPaint = true;
-                }
-            }
-            if (needsParitialPaint)
-                partialPaint();
+    private void setDirty(String fieldName) {
+        if (!fullRepaint) {
+            dirtyFields.add(fieldName);
+            partialPaint();
         }
     }
 
-    /**
-     * Determines whether or not a field has been marked as 'dirty'.  Used during {@see #paintContent} to determine if
-     * a field should be written to the {@see PaintTarget}.
-     * @param fieldName name of field
-     * @return true if field is 'dirty, false otherwise
-     */
-    protected boolean isDirty(String fieldName) {
+    private boolean isDirty(String fieldName) {
         /*
          * If full repaint if request repaint called directly or painted without
          * repaint.
@@ -274,7 +266,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
 
     /**
      * Receive and handle events and other variable changes from the client.
-     *
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -393,7 +385,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
      * <p>
      * Also note that init options only take effect if they are set before the
      * map gets rendered.
-     *
+     * 
      * @param jsMapOptions
      */
     public void setJsMapOptions(String jsMapOptions) {
@@ -406,10 +398,10 @@ public class OpenLayersMap extends AbstractComponentContainer implements
 
     /**
      * Zooms the map to display given bounds.
-     *
+     * 
      * <p>
      * Note that this method overrides possibly set center and zoom levels.
-     *
+     * 
      * @param bounds
      */
     public void zoomToExtent(Bounds bounds) {
@@ -431,7 +423,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
      * ensure about this by either using a base layer that only contains the
      * desired area or by "masking" out the undesired area with e.g. a vector
      * layer.
-     *
+     * 
      * @param bounds
      */
     public void setRestrictedExtent(Bounds bounds) {
@@ -446,7 +438,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
      * <p>
      * Note that resetting projection on already rendered map may cause
      * unexpected results.
-     *
+     * 
      * @param projection
      */
     public void setApiProjection(String projection) {
@@ -458,7 +450,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
      * Gets the projection which is used by the user of this map. E.g. values
      * passed to API like {@link #setCenter(double, double)} should be in the
      * same projection.
-     *
+     * 
      * @return the projection used, defaults to EPSG:4326
      */
     public String getApiProjection() {
@@ -548,7 +540,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
 
     /**
      * Registers a new action handler for this container
-     *
+     * 
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
     public void addActionHandler(Action.Handler actionHandler) {
@@ -563,7 +555,7 @@ public class OpenLayersMap extends AbstractComponentContainer implements
     /**
      * Removes a previously registered action handler for the contents of this
      * container.
-     *
+     * 
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
     public void removeActionHandler(Action.Handler actionHandler) {
