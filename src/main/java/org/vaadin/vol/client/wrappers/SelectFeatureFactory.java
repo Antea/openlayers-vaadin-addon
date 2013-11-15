@@ -72,6 +72,8 @@ public final class SelectFeatureFactory {
 		else {
 			SelectFeatureContainer cont = selectFeatureControls.get(selectionCtrlId);
 			cont.removeLayer(targetLayer,map);
+                        if (cont.layerVector.isEmpty())
+                            selectFeatureControls.remove(selectionCtrlId);
 		}
 	}
 	

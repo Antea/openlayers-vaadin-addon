@@ -586,6 +586,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             }
             if (selectFeature != null) {
                 getMap().removeControl(selectFeature);
+                SelectFeatureFactory.getInst().removeLayer(selectFeature, selectionCtrlId, getMap(), vectors);
             }
             if (hoverFeature != null) {
                 getMap().removeControl(hoverFeature);
