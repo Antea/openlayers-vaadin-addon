@@ -19,7 +19,7 @@
         <repository>
             <id>m2</id>
             <name>Repository m2.antea.bogus</name>
-            <url>scp://deployer@m2.antea.bogus/srv/maven</url>
+            <url>scpexe://maven.antea.bogus/srv/maven</url>
         </repository>
     </distributionManagement>
 
@@ -29,7 +29,15 @@
         <url>http://repo.antea.bogus:8081/?p=openlayers-vaadin-wrapper.git</url>
     </scm>
 	<build>
-		<plugins>
+<extensions>
+            <!-- Enabling the use of FTP -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>1.0-beta-6</version>
+            </extension>
+        </extensions>
+        <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
