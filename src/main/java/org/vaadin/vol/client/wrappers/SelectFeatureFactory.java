@@ -15,18 +15,7 @@ import com.google.gwt.core.client.JsArray;
  *
  */
 public final class SelectFeatureFactory {
-	private static SelectFeatureFactory inst=null;
 	private HashMap<String,SelectFeatureContainer> selectFeatureControls=null;	
-	
-	private SelectFeatureFactory() {
-	}
-	
-	public static SelectFeatureFactory getInst() {
-		if (inst==null)
-			inst = new SelectFeatureFactory();
-		return inst;
-	}
-	
 	
 	/**
 	 * return an existing SelectFeature instance for the specific id or create a new one

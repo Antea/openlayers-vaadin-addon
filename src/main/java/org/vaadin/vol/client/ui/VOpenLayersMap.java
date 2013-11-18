@@ -37,6 +37,8 @@ import com.vaadin.terminal.gwt.client.ui.Action;
 import com.vaadin.terminal.gwt.client.ui.ActionOwner;
 import com.vaadin.terminal.gwt.client.ui.TreeAction;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
+import org.vaadin.vol.client.wrappers.SelectFeatureFactory;
+import org.vaadin.vol.client.wrappers.control.SelectFeature;
 
 /**
  * Client side widget which communicates with the server. Messages from the
@@ -82,6 +84,15 @@ public class VOpenLayersMap extends FlowPanel implements Container, ActionOwner 
 
     private LonLat clickedLonLat;
 
+    private final SelectFeatureFactory selectFeatureFactory = new SelectFeatureFactory();
+
+    public void removeLayerFromSelectFeatureFactory(SelectFeature control,String selectionCtrlId,Layer targetLayer) {
+        selectFeatureFactory.removeLayer(control, selectionCtrlId, map, targetLayer);
+    }
+
+    public SelectFeature getOrCreateSelectFeature(String selectionCtrlId, Layer targetLayer) {
+        return selectFeatureFactory.getOrCreate(selectionCtrlId, map, targetLayer);
+    }
     /**
      * The constructor should first call super() to initialize the component and
      * then handle any initialization relevant to Vaadin.

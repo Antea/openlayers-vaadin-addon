@@ -358,7 +358,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
                 selectFeature.deActivate();
                 getMap().removeControl(selectFeature);
                 */
-                SelectFeatureFactory.getInst().removeLayer(selectFeature, selectionCtrlId, getMap(), vectors);
+                getVMap().removeLayerFromSelectFeatureFactory(selectFeature, selectionCtrlId, vectors);
                 selectFeature = null;
             }
 
@@ -586,7 +586,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
             }
             if (selectFeature != null) {
                 getMap().removeControl(selectFeature);
-                SelectFeatureFactory.getInst().removeLayer(selectFeature, selectionCtrlId, getMap(), vectors);
+                getVMap().removeLayerFromSelectFeatureFactory(selectFeature, selectionCtrlId, vectors);
             }
             if (hoverFeature != null) {
                 getMap().removeControl(hoverFeature);
@@ -661,7 +661,7 @@ public class VVectorLayer extends FlowPanel implements VLayer, Container {
     }
 
     protected SelectFeature createSelectFeature(VectorLayer layer, String selectMode) {
-        selectFeature = SelectFeatureFactory.getInst().getOrCreate(selectionCtrlId, getMap(), layer);
+        selectFeature = getVMap().getOrCreateSelectFeature(selectionCtrlId, layer);
         selectFeature.activate();
         return selectFeature;
     }

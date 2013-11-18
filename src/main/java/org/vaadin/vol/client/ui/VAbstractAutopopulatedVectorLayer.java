@@ -170,11 +170,11 @@ public abstract class VAbstractAutopopulatedVectorLayer<T> extends
                  * takes a array of layers. IMO all Instances of VAbstractAutopopulatedVectorLayer
                  * should share only one map owned select control.
                  */                
-                control = SelectFeatureFactory.getInst().getOrCreate(selectionCtrlId,getMap(),layer);
+                control = ((VOpenLayersMap) getParent().getParent()).getOrCreateSelectFeature(selectionCtrlId, layer);
             }
             control.activate();
         } else if (control != null) {
-        	SelectFeatureFactory.getInst().removeLayer(control,selectionCtrlId,getMap(),layer);
+        	((VOpenLayersMap) getParent().getParent()).removeLayerFromSelectFeatureFactory(control,selectionCtrlId,layer);
             control = null;
         }
     }
